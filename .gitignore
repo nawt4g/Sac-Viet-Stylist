@@ -1,0 +1,60 @@
+# =========================================
+# DEPENDENCIES (Các gói thư viện)
+# =========================================
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# =========================================
+# NEXT.JS & BUILD (File tạm và file build)
+# =========================================
+/.next/
+/out/
+/build
+*.tsbuildinfo
+next-env.d.ts
+
+# =========================================
+# ENVIRONMENT VARIABLES (Biến môi trường)
+# =========================================
+# Bỏ qua tất cả các file .env để bảo mật API Key
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+# NGOẠI TRỪ file mẫu (team member dùng file này để biết cần điền key gì)
+!.env.example
+
+# =========================================
+# VERCEL (Cấu hình deploy)
+# =========================================
+.vercel
+
+# =========================================
+# TESTING & LOGS (Log lỗi)
+# =========================================
+/coverage
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# =========================================
+# OS & IDE TEMP FILES (File rác của hệ điều hành & Trình soạn thảo)
+# =========================================
+.DS_Store
+Thumbs.db
+*.pem
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
