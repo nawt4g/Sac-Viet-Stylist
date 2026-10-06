@@ -3,18 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "npm run images:sync",
     "dev": "next dev",
+    "prebuild": "npm run images:sync",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "images:sync": "node scripts/sync-images.mjs",
+    "images:process": "node scripts/process-images.mjs",
+    "sync:images": "node scripts/sync-images.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
-    "@google/genai": "^2.24.0",
     "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "cn": "^0.4.0",
     "framer-motion": "^13.4.6",
     "html-to-image": "^1.11.13",
     "lucide-react": "^1.49.0",

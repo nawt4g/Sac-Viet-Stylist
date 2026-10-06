@@ -3,19 +3,28 @@
 /**
  * components/stylist/Stepper.tsx
  * ==============================
- * Thanh tiến trình Wizard 3 bước với viền vàng kim #D4AF37.
- * Hiển thị: completed (checkmark) | active (pulse ring) | pending (muted)
- * Click để navigate về step đã hoàn thành.
+ * Thanh tiến trình Wizard 3 bước chuẩn di sản với viền vàng kim #D4AF37.
+ * Hiển thị: completed (checkmark) | active (pulse ring) | pending (muted).
+ * Toàn bộ icon dùng Lucide React (không dùng emoji).
+ * Touch target tối thiểu 44px tối ưu mobile.
  */
 
-import { Check } from "lucide-react";
+import React from "react";
+import { Check, Sparkles, Shirt, Gem, type LucideIcon } from "lucide-react";
 import { useStylist } from "@/context/StylistContext";
 import type { WizardStep } from "@/context/StylistContext";
 
-const STEPS: { step: WizardStep; label: string; sublabel: string; icon: string }[] = [
-  { step: 1, label: "Sắc Da", sublabel: "Nhận diện tông màu", icon: "✦" },
-  { step: 2, label: "Cổ Phục", sublabel: "Chọn & Ngữ cảnh", icon: "👘" },
-  { step: 3, label: "Phụ Kiện", sublabel: "Mix & Kiểm định", icon: "⚡" },
+interface StepItem {
+  step: WizardStep;
+  label: string;
+  sublabel: string;
+  icon: LucideIcon;
+}
+
+const STEPS: StepItem[] = [
+  { step: 1, label: "Sắc Da", sublabel: "Nhận diện tông màu", icon: Sparkles },
+  { step: 2, label: "Cổ Phục", sublabel: "Chọn & Ngữ cảnh", icon: Shirt },
+  { step: 3, label: "Phụ Kiện", sublabel: "Mix & Kiểm định", icon: Gem },
 ];
 
 export function Stepper() {
@@ -23,35 +32,30 @@ export function Stepper() {
   const { currentStep, completedSteps } = state;
 
   return (
-    <nav
-      aria-label="Tiến trình phối đồ 3 bước"
-      className="w-full"
-    >
-      <ol
-        className="flex items-center justify-between"
-        role="list"
-      >
-        {STEPS.map(({ step, label, sublabel, icon }, index) => {
+    <nav aria-label="Tiến trình phối đồ 3 bước" className="w-full">
+      <ol className="flex items-center justify-between" role="list">
+        {STEPS.map(({ step, label, sublabel, icon: IconComponent }, index) => {
           const isCompleted = completedSteps.has(step);
           const isActive = currentStep === step;
-          const isPending = !isCompleted && !isActive;
           const isClickable = isCompleted;
 
           return (
-            <li
-              key={step}
-              className="flex flex-1 items-center"
-              role="listitem"
-            >
-              {/* Step node */}
+            <li key={step} className="flex flex-1 items-center" role="listitem">
+              {/* Step button (Touch target >= 44px) */}
               <button
                 id={`stepper-step-${step}`}
                 type="button"
                 onClick={() => isClickable && goToStep(step)}
                 disabled={!isClickable}
                 aria-current={isActive ? "step" : undefined}
-                aria-label={`Bước ${step}: ${label} — ${isCompleted ? "Đã hoàn thành" : isActive ? "Đang thực hiện" : "Chưa bắt đầu"}`}
-                className={`group flex flex-col items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 ${
+                aria-label={`Bước ${step}: ${label} — ${
+                  isCompleted
+                    ? "Đã hoàn thành"
+                    : isActive
+                    ? "Đang thực hiện"
+                    : "Chưa bắt đầu"
+                }`}
+                className={`group flex min-h-[48px] flex-col items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 ${
                   isClickable ? "cursor-pointer" : "cursor-default"
                 }`}
               >
@@ -60,7 +64,7 @@ export function Stepper() {
                   {/* Pulse ring for active step */}
                   {isActive && (
                     <span
-                      className="absolute inset-0 -m-1 rounded-full border-2 border-[#D4AF37] animate-ping opacity-40"
+                      className="absolute inset-0 -m-1 rounded-full border-2 border-[#D4AF37] animate-ping opacity-35"
                       aria-hidden="true"
                     />
                   )}
@@ -82,7 +86,7 @@ export function Stepper() {
                       />
                     ) : (
                       <span
-                        className={`font-playfair text-lg font-bold leading-none transition-colors duration-300 ${
+                        className={`font-playfair text-base font-bold leading-none transition-colors duration-300 ${
                           isActive ? "text-[#9E2A2B]" : "text-[#C0B8A8]"
                         }`}
                         aria-hidden="true"
@@ -96,7 +100,7 @@ export function Stepper() {
                 {/* Label */}
                 <div className="text-center">
                   <p
-                    className={`text-sm font-semibold transition-colors duration-200 ${
+                    className={`flex items-center justify-center gap-1 text-xs sm:text-sm font-semibold transition-colors duration-200 ${
                       isActive
                         ? "text-[#9E2A2B]"
                         : isCompleted
@@ -104,13 +108,12 @@ export function Stepper() {
                         : "text-[#C0B8A8]"
                     }`}
                   >
-                    {label}
+                    <IconComponent className="hidden sm:inline h-3.5 w-3.5" />
+                    <span>{label}</span>
                   </p>
                   <p
-                    className={`text-[10px] transition-colors duration-200 ${
-                      isActive || isCompleted
-                        ? "text-[#6B7280]"
-                        : "text-[#C0B8A8]"
+                    className={`hidden sm:block text-[10px] transition-colors duration-200 ${
+                      isActive || isCompleted ? "text-[#6B7280]" : "text-[#C0B8A8]"
                     }`}
                   >
                     {sublabel}
@@ -120,10 +123,7 @@ export function Stepper() {
 
               {/* Connector line (not after last step) */}
               {index < STEPS.length - 1 && (
-                <div
-                  className="mx-2 flex-1 sm:mx-4"
-                  aria-hidden="true"
-                >
+                <div className="mx-2 flex-1 sm:mx-4" aria-hidden="true">
                   <div className="relative h-0.5 w-full overflow-hidden rounded-full bg-[#E5DECE]">
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-[#D4AF37] to-[#E8CC6E] transition-all duration-500 ease-out"
@@ -141,3 +141,5 @@ export function Stepper() {
     </nav>
   );
 }
+
+export default Stepper;

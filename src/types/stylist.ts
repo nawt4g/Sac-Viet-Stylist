@@ -19,17 +19,36 @@
 /** Trạng thái guardrail văn hóa — 3 mức độ */
 export type GuardrailStatus = "GREEN" | "YELLOW" | "RED";
 
-/** Loại cổ phục Việt Nam được hỗ trợ */
+/** 5 Cổ phục chuẩn của hệ thống Sắc Việt Stylist */
+export type CostumeId =
+  | "ao-ngu-than"
+  | "ao-tac"
+  | "ao-nhat-binh"
+  | "ao-tu-than"
+  | "ao-dai";
+
+/** Loại cổ phục Việt Nam (hỗ trợ CostumeId chuẩn và tương thích ngược với legacy types) */
 export type CostumeType =
-  | "ao_ngu_than"     // Áo Ngũ Thân — 5 vạt, trang trọng
-  | "ao_tac"          // Áo Tấc — ngắn hơn, linh hoạt hơn
-  | "ao_dai"          // Áo Dài — hiện đại nhất
-  | "ao_ba_ba"        // Áo Bà Ba — Nam Bộ
-  | "ao_tu_than"      // Áo Tứ Thân — Bắc Bộ truyền thống
-  | "khan_dong"       // Khăn Đóng — mũ cổ truyền
+  | CostumeId
+  | "ao_ngu_than"     // Áo Ngũ Thân
+  | "ao_tac"          // Áo Tấc
+  | "ao_nhat_binh"    // Áo Nhật Bình
+  | "ao_dai"          // Áo Dài
+  | "ao_ba_ba"        // Áo Bà Ba
+  | "ao_tu_than"      // Áo Tứ Thân
+  | "khan_dong"       // Khăn Đóng
   | "non_la"          // Nón Lá
-  | "quan_lung"       // Quần Lụng — quần cổ truyền
-  | "quan_tay";       // Quần Tây — phối hiện đại
+  | "quan_lung"       // Quần Lụng
+  | "quan_tay";       // Quần Tây
+
+/** 6 Ngữ cảnh chuẩn trong Stylist Wizard */
+export type ContextType =
+  | "van-mieu"
+  | "ky-yeu"
+  | "dao-pho"
+  | "dam-cuoi"
+  | "le-hoi"
+  | "chup-anh";
 
 /** Dịp / Context sử dụng trang phục */
 export type WearingContext =
@@ -43,7 +62,7 @@ export type WearingContext =
   | "casual_modern";  // Phối đời thường hiện đại
 
 /** Vùng miền văn hóa */
-export type CulturalRegion = "north" | "central" | "south";
+export type CulturalRegion = "north" | "central" | "south" | "all";
 
 /** Triều đại lịch sử liên quan */
 export type HistoricalPeriod =
@@ -58,8 +77,8 @@ export type HistoricalPeriod =
    ============================================================ */
 
 export interface BaseCostume {
-  /** ID định danh duy nhất */
-  id: string;
+  /** ID định danh duy nhất (chuẩn: ao-ngu-than, ao-tac, ao-nhat-binh, ao-tu-than, ao-dai) */
+  id: CostumeId | string;
 
   /** Tên trang phục (tiếng Việt có dấu) */
   name: string;
@@ -93,6 +112,15 @@ export interface BaseCostume {
 
   /** Tags tìm kiếm */
   tags: string[];
+
+  /** Tên triều đại / thời kỳ hiển thị trên UI */
+  dynasty?: string;
+
+  /** Các biến thể màu sắc gợi ý */
+  colors?: { hex: string; name: string }[];
+
+  /** Màu sắc điểm nhấn thương hiệu */
+  accentColor?: string;
 }
 
 /* ============================================================

@@ -3,21 +3,34 @@
  * components/result/HeritageCard3D.tsx
  * =======================================
  * Thẻ di sản lật 3D — dùng CSS 3D preserve-3d + Framer Motion.
- * Mặt trước: Hoa văn mây ngũ sắc + tiêu đề.
- * Mặt sau: Nội dung triết lý đầy đủ.
+ * Mặt trước: Họa tiết mây ngũ sắc truyền thống + tiêu đề & tóm tắt.
+ * Mặt sau: Nội dung triết lý & nguồn dẫn đầy đủ.
+ * Tối ưu responsive và độ tương phản dễ đọc trên thiết bị mobile.
  */
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import {
+  Scroll,
+  Flower2,
+  Landmark,
+  MapPin,
+  Palette,
+  Scissors,
+  RotateCw,
+  Sparkles,
+} from "lucide-react";
 import type { HeritageCard } from "@/types/stylist";
+import { ImageSlot } from "@/components/common/ImageSlot";
+import { getPatternImage } from "@/lib/images";
 
-const TYPE_META: Record<HeritageCard["type"], { emoji: string; color: string; label: string }> = {
-  history:      { emoji: "📜", color: "#1E3A5F", label: "Lịch Sử" },
-  symbolism:    { emoji: "🌸", color: "#9E2A2B", label: "Biểu Tượng" },
-  etiquette:    { emoji: "🏛️", color: "#4A7856", label: "Lễ Nghi" },
-  regional:     { emoji: "🗺️", color: "#7B5E3A", label: "Vùng Miền" },
-  color_meaning:{ emoji: "🎨", color: "#D4AF37", label: "Màu Sắc" },
-  material:     { emoji: "🧵", color: "#6B7280", label: "Chất Liệu" },
+const TYPE_META: Record<HeritageCard["type"], { icon: typeof Scroll; color: string; label: string }> = {
+  history:      { icon: Scroll,    color: "#1E3A5F", label: "Lịch Sử" },
+  symbolism:    { icon: Flower2,   color: "#9E2A2B", label: "Biểu Tượng" },
+  etiquette:    { icon: Landmark,  color: "#4A7856", label: "Lễ Nghi" },
+  regional:     { icon: MapPin,    color: "#7B5E3A", label: "Vùng Miền" },
+  color_meaning:{ icon: Palette,   color: "#D4AF37", label: "Màu Sắc" },
+  material:     { icon: Scissors,  color: "#6B7280", label: "Chất Liệu" },
 };
 
 const LEVEL_BADGE: Record<HeritageCard["level"], { label: string; bg: string; text: string }> = {
@@ -26,78 +39,88 @@ const LEVEL_BADGE: Record<HeritageCard["level"], { label: string; bg: string; te
   expert:       { label: "Nâng Cao",  bg: "#EFF6FF", text: "#2563EB" },
 };
 
-/* ── Cloud pattern SVG (decorative) ── */
-function CloudPattern({ color }: { color: string }) {
+/* ── Traditional Pattern with ImageSlot ── */
+function HeritageTraditionalPattern({
+  type,
+  isLight = false,
+}: {
+  type: HeritageCard["type"];
+  isLight?: boolean;
+}) {
+  const patternName =
+    type === "symbolism" || type === "regional"
+      ? "hoa-sen"
+      : type === "history" || type === "etiquette"
+      ? "hac-may"
+      : type === "color_meaning"
+      ? "medallion"
+      : "may-song";
+
+  const pattern = getPatternImage(patternName);
+
   return (
-    <svg
-      className="absolute inset-0 h-full w-full opacity-[0.06]"
-      viewBox="0 0 200 200"
+    <div
+      className={`pointer-events-none absolute inset-0 overflow-hidden ${
+        isLight ? "opacity-15 mix-blend-screen" : "opacity-[0.08] mix-blend-multiply"
+      }`}
       aria-hidden="true"
-      fill={color}
     >
-      {/* Mây ngũ sắc stylized */}
-      <circle cx="40" cy="40" r="25" />
-      <circle cx="65" cy="30" r="20" />
-      <circle cx="90" cy="40" r="25" />
-      <circle cx="115" cy="30" r="18" />
-      <circle cx="140" cy="40" r="22" />
-      <circle cx="30" cy="130" r="18" />
-      <circle cx="55" cy="120" r="22" />
-      <circle cx="80" cy="130" r="18" />
-      <circle cx="150" cy="130" r="20" />
-      <circle cx="175" cy="120" r="18" />
-      <ellipse cx="100" cy="160" rx="60" ry="15" />
-      <ellipse cx="100" cy="60" rx="50" ry="12" />
-      {/* Lotus motif */}
-      <path d="M100 100 Q90 85 100 75 Q110 85 100 100Z" />
-      <path d="M100 100 Q85 90 80 100 Q90 108 100 100Z" />
-      <path d="M100 100 Q115 90 120 100 Q110 108 100 100Z" />
-    </svg>
+      <ImageSlot
+        src={pattern.src}
+        alt={pattern.title}
+        available={pattern.available}
+        aspectRatio="1/1"
+        className="h-full w-full object-cover scale-110"
+      />
+    </div>
   );
 }
 
 /* ── Single flip card ── */
 function FlipCard({ card }: { card: HeritageCard }) {
   const [flipped, setFlipped] = useState(false);
-  const meta = TYPE_META[card.type];
-  const level = LEVEL_BADGE[card.level];
+  const shouldReduceMotion = useReducedMotion();
+  const meta = TYPE_META[card.type] ?? { icon: Scroll, color: "#1E3A5F", label: "Di Sản" };
+  const level = LEVEL_BADGE[card.level] ?? LEVEL_BADGE.beginner;
+  const Icon = meta.icon;
 
   return (
     <div
-      className="group relative h-64 w-full cursor-pointer"
+      className="group relative h-72 sm:h-80 w-full cursor-pointer select-none"
       style={{ perspective: "1200px" }}
       onClick={() => setFlipped((f) => !f)}
       onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setFlipped((f) => !f)}
       role="button"
       tabIndex={0}
       aria-pressed={flipped}
-      aria-label={`${flipped ? "Lật lại" : "Lật thẻ xem"}: ${card.title}`}
+      aria-label={`${flipped ? "Lật lại mặt trước" : "Lật thẻ xem chi tiết"}: ${card.title}`}
     >
       <motion.div
         className="relative h-full w-full"
         style={{ transformStyle: "preserve-3d" }}
         animate={{ rotateY: flipped ? 180 : 0 }}
-        transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
+        transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
       >
         {/* ── FRONT FACE ── */}
         <div
-          className="absolute inset-0 overflow-hidden rounded-2xl border-2 p-5"
+          className="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-2xl border-2 p-5 shadow-sm transition-shadow hover:shadow-md"
           style={{
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
             borderColor: `${meta.color}40`,
-            background: `linear-gradient(135deg, #FAF8F5 0%, ${meta.color}08 100%)`,
+            background: `linear-gradient(145deg, #FAF8F5 0%, ${meta.color}0A 100%)`,
           }}
         >
-          <CloudPattern color={meta.color} />
+          <HeritageTraditionalPattern type={card.type} />
 
           {/* Top row */}
           <div className="relative z-10 flex items-start justify-between gap-2">
             <span
-              className="rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white"
+              className="flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-xs"
               style={{ backgroundColor: meta.color }}
             >
-              {meta.emoji} {meta.label}
+              <Icon className="h-3 w-3" />
+              <span>{meta.label}</span>
             </span>
             <span
               className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
@@ -107,31 +130,33 @@ function FlipCard({ card }: { card: HeritageCard }) {
             </span>
           </div>
 
-          {/* Title */}
-          <h4
-            className="relative z-10 mt-4 font-playfair text-base font-bold leading-snug"
-            style={{ color: meta.color === "#D4AF37" ? "#1E3A5F" : meta.color }}
-          >
-            {card.title}
-          </h4>
+          {/* Center: Title & Summary */}
+          <div className="relative z-10 my-auto py-2">
+            <h4
+              className="font-playfair text-base sm:text-lg font-bold leading-snug"
+              style={{ color: meta.color === "#D4AF37" ? "#1E3A5F" : meta.color }}
+            >
+              {card.title}
+            </h4>
+            <p className="mt-2 line-clamp-4 text-xs leading-relaxed text-[#4A6A8F]">
+              {card.summary}
+            </p>
+          </div>
 
-          {/* Summary */}
-          <p className="relative z-10 mt-3 line-clamp-3 text-xs leading-relaxed text-[#4A6A8F]">
-            {card.summary}
-          </p>
-
-          {/* Flip hint */}
-          <div className="absolute bottom-4 right-4 flex items-center gap-1">
-            <div className="h-px w-4 bg-[#D4AF37]" aria-hidden="true" />
-            <span className="text-[9px] font-bold uppercase tracking-widest text-[#D4AF37]">
-              Lật thẻ
+          {/* Bottom hint */}
+          <div className="relative z-10 flex items-center justify-between border-t border-[#E5DECE]/60 pt-2.5">
+            <span className="flex items-center gap-1 text-[10px] text-[#D4AF37] font-semibold">
+              <Sparkles className="h-3 w-3" /> Tri thức di sản
+            </span>
+            <span className="flex items-center gap-1 rounded-full bg-[#D4AF37]/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#9E2A2B]">
+              <RotateCw className="h-3 w-3" /> Chạm để lật
             </span>
           </div>
         </div>
 
         {/* ── BACK FACE ── */}
         <div
-          className="absolute inset-0 overflow-hidden rounded-2xl border-2 p-5"
+          className="absolute inset-0 flex flex-col overflow-hidden rounded-2xl border-2 p-5 shadow-md"
           style={{
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
@@ -140,31 +165,42 @@ function FlipCard({ card }: { card: HeritageCard }) {
             backgroundColor: meta.color,
           }}
         >
-          <CloudPattern color="white" />
+          <HeritageTraditionalPattern type={card.type} isLight={true} />
 
           {/* Back content */}
           <div className="relative z-10 flex h-full flex-col">
-            <div className="flex items-center gap-2">
-              <span className="text-lg text-white" aria-hidden="true">{meta.emoji}</span>
-              <p className="text-xs font-bold uppercase tracking-widest text-white/80">
-                {meta.label}
-              </p>
+            <div className="flex items-center justify-between border-b border-white/20 pb-2.5">
+              <div className="flex items-center gap-1.5">
+                <Icon className="h-4 w-4 text-white" />
+                <p className="text-xs font-bold uppercase tracking-wider text-white">
+                  {meta.label} · Chi tiết
+                </p>
+              </div>
+              <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-semibold text-white">
+                {level.label}
+              </span>
             </div>
 
-            <p className="mt-3 flex-1 overflow-y-auto text-xs leading-relaxed text-white/90">
-              {card.content}
-            </p>
-
-            {/* Sources */}
-            {card.sources && card.sources.length > 0 && (
-              <p className="mt-3 text-[10px] italic text-white/60">
-                Nguồn: {card.sources.join(", ")}
+            <div className="mt-3 flex-1 overflow-y-auto pr-1">
+              <p className="text-xs leading-relaxed text-white/95">
+                {card.content}
               </p>
-            )}
 
-            <p className="mt-2 text-center text-[9px] font-bold uppercase tracking-widest text-white/50">
-              Nhấn để lật lại
-            </p>
+              {/* Sources */}
+              {card.sources && card.sources.length > 0 && (
+                <div className="mt-3 rounded-lg bg-black/15 p-2 border border-white/10">
+                  <p className="text-[10px] italic text-white/80">
+                    Nguồn tài liệu: {card.sources.join(", ")}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-3 flex items-center justify-center border-t border-white/20 pt-2">
+              <p className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-white/75">
+                <RotateCw className="h-3 w-3" /> Nhấn để lật lại mặt trước
+              </p>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -184,9 +220,10 @@ export function HeritageCard3D({ cards }: Props) {
         <div className="h-px flex-1 bg-[#E5DECE]" aria-hidden="true" />
         <h3
           id="heritage-3d-heading"
-          className="text-xs font-bold uppercase tracking-[0.2em] text-[#D4AF37]"
+          className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#D4AF37]"
         >
-          ✦ Thẻ Di Sản Kỹ Thuật Số
+          <Sparkles className="h-3.5 w-3.5" />
+          Thẻ Di Sản Kỹ Thuật Số
         </h3>
         <div className="h-px flex-1 bg-[#E5DECE]" aria-hidden="true" />
       </div>
@@ -203,8 +240,8 @@ export function HeritageCard3D({ cards }: Props) {
         ))}
       </div>
 
-      <p className="mt-3 text-center text-xs text-[#C0B8A8]">
-        Nhấn vào thẻ để lật và đọc nội dung đầy đủ
+      <p className="mt-3.5 text-center text-xs text-[#6B7280]">
+        Chạm hoặc nhấn vào thẻ để lật xem điển tích, lễ nghi và nguồn trích dẫn lịch sử
       </p>
     </section>
   );

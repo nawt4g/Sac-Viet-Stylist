@@ -16,6 +16,9 @@ import type {
   CulturalGuardrail,
   HeritageCard,
 } from "@/types/stylist";
+import { COSTUMES } from "./costumes";
+
+export { COSTUMES };
 
 /* ============================================================
    BASE COSTUMES — Trang phục cổ truyền
@@ -25,7 +28,7 @@ export const costumeNguThan: BaseCostume = {
   id: "costume-ngu-than-001",
   name: "Áo Ngũ Thân Tay Chẽn",
   nameEn: "Five-Panel Narrow-Sleeve Tunic",
-  type: "ao_ngu_than",
+  type: "ao-ngu-than",
   description:
     "Áo Ngũ Thân 5 vạt đặc trưng của văn hóa Việt, tay chẽn (tay hẹp) mang phong cách thanh thoát. Đây là trang phục chuẩn mực của sĩ phu và người dân thời Nguyễn, biểu tượng cho 5 mối quan hệ luân thường trong Nho giáo.",
   suitableContexts: ["daily", "festival", "ceremony", "photoshoot", "casual_modern"],
@@ -33,7 +36,7 @@ export const costumeNguThan: BaseCostume = {
   materials: ["lụa", "gấm", "vải lanh", "cotton cao cấp", "tơ tằm"],
   period: "nguyen",
   region: "central",
-  imageUrl: null,
+  imageUrl: "/images/flatlay/ao-ngu-than.png",
   tags: ["áo ngũ thân", "cổ phục", "trang trọng", "tay chẽn", "5 vạt", "Nhà Nguyễn"],
 };
 
@@ -41,7 +44,7 @@ export const costumeAoTac: BaseCostume = {
   id: "costume-ao-tac-001",
   name: "Áo Tấc",
   nameEn: "Short Heritage Tunic",
-  type: "ao_tac",
+  type: "ao-tac",
   description:
     "Áo Tấc — còn gọi là áo ngũ thân ngắn — phổ biến trong dân gian thế kỷ 18–20. Thân ngắn hơn áo dài, thường mặc với quần lụng trắng. Linh hoạt hơn Ngũ Thân, phù hợp nhiều hoạt động đời thường.",
   suitableContexts: ["daily", "festival", "casual_modern", "photoshoot"],
@@ -49,7 +52,7 @@ export const costumeAoTac: BaseCostume = {
   materials: ["lụa Hà Đông", "vải cotton", "linen", "tơ tằm"],
   period: "nguyen",
   region: "north",
-  imageUrl: null,
+  imageUrl: "/images/flatlay/ao-tac.png",
   tags: ["áo tấc", "cổ phục", "dân gian", "linh hoạt", "ngắn"],
 };
 
@@ -123,7 +126,7 @@ const guardrailCase1: CulturalGuardrail = {
   status: "GREEN",
   culturalScore: 95,
   statusMessage:
-    "✅ Xuất sắc! Cách phối đồ này thể hiện sự tôn trọng di sản văn hóa Việt Nam và hoàn toàn phù hợp với tiêu chuẩn văn hóa.",
+    "Xuất sắc! Cách phối đồ này thể hiện sự tôn trọng di sản văn hóa Việt Nam và hoàn toàn phù hợp với tiêu chuẩn văn hóa.",
   violations: [],
   suggestions: [
     {
@@ -214,7 +217,7 @@ const guardrailCase2: CulturalGuardrail = {
   status: "YELLOW",
   culturalScore: 62,
   statusMessage:
-    "⚠️ Chú ý ngữ cảnh! Áo Tấc phù hợp về mặt văn hóa, nhưng cách phối cụ thể cần điều chỉnh để phù hợp với không gian Văn Miếu.",
+    "Chú ý ngữ cảnh! Áo Tấc phù hợp về mặt văn hóa, nhưng cách phối cụ thể cần điều chỉnh để phù hợp với không gian Văn Miếu.",
   violations: [
     {
       type: "wrong_context",
@@ -325,7 +328,7 @@ const guardrailCase3: CulturalGuardrail = {
   status: "RED",
   culturalScore: 18,
   statusMessage:
-    "🚫 Không khuyến nghị. Kết hợp này vi phạm nghiêm trọng chuẩn mực văn hóa cổ phục Việt Nam và gây hiểu lầm về di sản.",
+    "Không khuyến nghị. Kết hợp này vi phạm nghiêm trọng chuẩn mực văn hóa cổ phục Việt Nam và gây hiểu lầm về di sản.",
   violations: [
     {
       type: "inappropriate_combination",
@@ -370,7 +373,7 @@ const guardrailCase3: CulturalGuardrail = {
 
 const stylingMixCase3Rejected: StylingMix = {
   id: "mix-ao-tac-short-rejected-001",
-  title: "[❌ BỊ TỪ CHỐI] Áo Tấc + Quần Short",
+  title: "[CHƯA PHÙ HỢP] Áo Tấc + Quần Short",
   style: "Rejected Combination",
   baseCostumeId: "costume-ao-tac-001",
   context: "casual_modern",
@@ -381,21 +384,21 @@ const stylingMixCase3Rejected: StylingMix = {
       name: "Áo Tấc (đề xuất gốc)",
       category: "top",
       colors: ["#8B2635"],
-      rationale: "❌ Áo Tấc không phù hợp khi phối với quần short.",
+      rationale: "Áo Tấc không phù hợp khi phối với quần short.",
     },
     {
-      name: "Quần short (❌ Bị từ chối)",
+      name: "Quần short (Chưa phù hợp)",
       category: "bottom",
       colors: ["#1A1A1A"],
       rationale:
-        "❌ KHÔNG PHÙ HỢP: Quần short vi phạm chuẩn mực văn hóa khi phối với cổ phục Việt Nam.",
+        "CHƯA PHÙ HỢP: Quần short vi phạm chuẩn mực văn hóa khi phối với cổ phục Việt Nam.",
     },
   ],
   stylingTips: [
-    "🚫 KHÔNG nên mặc combination này trong bất kỳ ngữ cảnh nào.",
-    "✅ Thay thế: Áo Tấc + Quần âu đen thẳng + Oxford shoes — xem Case 1.",
-    "✅ Thay thế: Áo Tấc + Quần lụng trắng — truyền thống và đúng mực.",
-    "ℹ️ Muốn mặc quần short? Chọn áo thun đơn giản thay vì ghép với cổ phục.",
+    "Khuyến nghị không nên mặc combination này trong bất kỳ ngữ cảnh nào.",
+    "Gợi ý thay thế: Áo Tấc + Quần âu đen thẳng + Oxford shoes — xem Case 1.",
+    "Gợi ý thay thế: Áo Tấc + Quần lụng trắng — truyền thống và đúng mực.",
+    "Khi chọn quần short: Chọn áo thun đơn giản thay vì ghép với cổ phục.",
   ],
 };
 
@@ -420,8 +423,8 @@ export const outfitResponseCase3: OutfitResponse = {
    EXPORTS — Aggregated collections
    ============================================================ */
 
-/** Tất cả BaseCostume mẫu */
-export const ALL_COSTUMES: BaseCostume[] = [costumeNguThan, costumeAoTac];
+/** Tất cả BaseCostume mẫu (5 loại chuẩn hóa) */
+export const ALL_COSTUMES: BaseCostume[] = COSTUMES;
 
 /** Tất cả HeritageCard mẫu */
 export const ALL_HERITAGE_CARDS: HeritageCard[] = [

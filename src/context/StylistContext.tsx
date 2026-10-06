@@ -1,7 +1,9 @@
 "use client";
 
-import type { OutfitResponse } from "@/types/stylist";
+import type { OutfitResponse, CostumeId, ContextType } from "@/types/stylist";
 import { OUTFIT_BY_STATUS } from "@/data/mockData";
+
+export type { CostumeId, ContextType };
 
 /**
  * context/StylistContext.tsx
@@ -41,27 +43,12 @@ export interface ColorChip {
   nameVi: string;
 }
 
-export type CostumeId =
-  | "ao-ngu-than"
-  | "ao-tac"
-  | "ao-nhat-binh"
-  | "ao-tu-than"
-  | "ao-dai";
-
 export interface SelectedCostume {
   id: CostumeId;
   name: string;
   nameEn: string;
   color: string; // selected color hex
 }
-
-export type ContextType =
-  | "van-mieu"
-  | "ky-yeu"
-  | "dao-pho"
-  | "dam-cuoi"
-  | "le-hoi"
-  | "chup-anh";
 
 export type WeatherPreset = "hanoi-hot" | "hanoi-cool" | "hcm-humid" | "danang-mild";
 

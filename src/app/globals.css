@@ -21,11 +21,28 @@
   /* Primary / CTA — Crimson Đỏ Son */
   --color-primary: #9E2A2B;
   --color-primary-foreground: #FFFFFF;
+  --color-crimson: #9E2A2B;
+  --color-crimson-light: #B83234;
+  --color-crimson-dark: #7D1F20;
 
   /* Heritage / Gold */
   --color-gold: #D4AF37;
   --color-gold-light: #E8CC6E;
   --color-gold-dark: #A88A1F;
+  --color-gold-line: #D4AF37;
+  --color-gold-line-subtle: rgb(212 175 55 / 0.25);
+
+  /* Ink / Văn hoá Mực Nho & Chàm sẫm */
+  --color-ink: #1E3A5F;
+  --color-ink-light: #2C527F;
+  --color-ink-muted: #4A6A8F;
+  --color-ink-black: #1A1A1A;
+
+  /* Paper / Nền Giấy Điệp, Giấy Dó */
+  --color-paper: #FAF8F5;
+  --color-paper-warm: #F3EFE8;
+  --color-paper-card: #FFFFFF;
+  --color-paper-border: #E5DECE;
 
   /* Secondary / Text chính — Deep Navy */
   --color-navy: #1E3A5F;
@@ -79,8 +96,23 @@
   --color-sidebar-border: #E5DECE;
   --color-sidebar-ring: #D4AF37;
 
+  /* Typography scale */
+  --text-2xs: 0.625rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+
   /* Border radius system */
   --radius: 0.625rem;
+  --radius-none: 0px;
+  --radius-xs: calc(var(--radius) * 0.4);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -88,6 +120,17 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-full: 9999px;
+
+  /* Shadows system */
+  --shadow-xs: 0 1px 2px 0 rgb(30 58 95 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(30 58 95 / 0.08), 0 1px 2px -1px rgb(30 58 95 / 0.08);
+  --shadow-md: 0 4px 6px -1px rgb(30 58 95 / 0.08), 0 2px 4px -2px rgb(30 58 95 / 0.08);
+  --shadow-lg: 0 10px 15px -3px rgb(30 58 95 / 0.08), 0 4px 6px -4px rgb(30 58 95 / 0.08);
+  --shadow-xl: 0 20px 25px -5px rgb(30 58 95 / 0.08), 0 8px 10px -6px rgb(30 58 95 / 0.08);
+  --shadow-2xl: 0 25px 50px -12px rgb(30 58 95 / 0.2);
+  --shadow-gold: 0 4px 20px -2px rgb(212 175 55 / 0.25);
+  --shadow-heritage: 0 10px 30px -5px rgb(30 58 95 / 0.08);
 
   /* Chart colors — Neo-Heritage palette */
   --color-chart-1: #9E2A2B;
@@ -201,6 +244,22 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgb(212 175 55 / 0.2);
+  }
+
+  /* Paper texture & background utility */
+  .paper-bg {
+    background-color: var(--color-paper, #FAF8F5);
+    background-image: radial-gradient(rgba(30, 58, 95, 0.035) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Gold rule decorative divider line */
+  .gold-rule {
+    display: block;
+    height: 1px;
+    border: 0;
+    background: linear-gradient(90deg, transparent 0%, #D4AF37 50%, transparent 100%);
+    width: 100%;
   }
 }
 

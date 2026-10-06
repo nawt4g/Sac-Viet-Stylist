@@ -1,44 +1,53 @@
 /**
  * app/page.tsx — Landing Page "/"
  * =================================
- * SSG (Static Site Generation) — generateStaticParams không cần vì đây là root.
- * Toàn bộ component là Server Components → zero client JS.
+ * SSG (Static Site Generation) — Trang chủ Sắc Việt Stylist.
  *
- * Semantic structure:
- *   <header>     → Site navigation
+ * Cấu trúc ngữ nghĩa (Semantic structure):
+ *   <header>     → Site Header & Navigation
  *   <main>
- *     <section>  → Hero (HeroSection)
- *     <section>  → Heritage Grid (HeritageTopicGrid)
- *     <section>  → Process / How it works
- *     <section>  → Trust / Cultural promise
+ *     <section>  → HeroSection (Editorial magazine style với hero-editorial.png)
+ *     <divider>  → .gold-rule
+ *     <section>  → HeritageTopicGrid (5 cổ phục chuẩn hóa với ImageSlot & getFlatlay)
+ *     <divider>  → .gold-rule
+ *     <section>  → LookbookPreview (Dải 6 looks nổi bật scroll ngang)
+ *     <divider>  → .gold-rule
+ *     <section>  → HowItWorks (Quy trình 3 bước phối đồ với AI)
+ *     <section>  → CulturalPromise (Cam kết chuẩn mực văn hóa)
  *   </main>
- *   <footer>     → Links, copyright
- *
- * JSON-LD: Organization + WebApplication schemas nhúng vào <head> qua layout
+ *   <footer>     → Links, Copyright & AI Disclaimer
  */
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Wand2, ShieldCheck } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  Wand2,
+  ShieldCheck,
+  Sparkles,
+  Compass,
+} from "lucide-react";
 
 import { HeroSection } from "@/components/home/HeroSection";
 import { HeritageTopicGrid } from "@/components/home/HeritageTopicGrid";
+import { LookbookPreview } from "@/components/home/LookbookPreview";
 import { HomePageJsonLd } from "@/components/seo/JsonLd";
 
-/* ── Page-level metadata (overrides root layout template) ── */
+/* ── Page-level metadata ── */
 export const metadata: Metadata = {
   title: "Sắc Việt AI Stylist — Phối Cổ Phục Việt Đương Đại cho Gen Z",
   description:
-    "Khám phá 5 nhóm cổ phục Việt Nam với AI Stylist. Gợi ý phối đồ thông minh, kiểm định văn hóa 3 cấp, tôn vinh di sản cho thế hệ trẻ.",
+    "Khám phá 5 nhóm cổ phục Việt Nam cùng AI Stylist. Gợi ý phối đồ thông minh theo 6 ngữ cảnh, kiểm định văn hóa 3 cấp độ, tôn vinh di sản cho thế hệ trẻ.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Sắc Việt AI Stylist — Phối Cổ Phục Đương Đại",
+    title: "Sắc Việt AI Stylist — Phối Cổ Phục Đương Đại cho Gen Z",
     description:
-      "AI đầu tiên tư vấn phối cổ phục Việt Nam. 5 nhóm phục trang, 100% kiểm định văn hóa.",
+      "Nền tảng AI đầu tiên tư vấn phối cổ phục Việt Nam: Áo Ngũ Thân, Áo Tấc, Nhật Bình, Tứ Thân, Áo Dài. 100% kiểm định chuẩn mực văn hóa.",
     url: "/",
-    images: [{ url: "/hero-editorial.jpg", width: 900, height: 1200 }],
+    images: [{ url: "/hero-editorial.png", width: 1200, height: 630 }],
   },
 };
 
@@ -48,27 +57,27 @@ const HOW_IT_WORKS = [
     id: "step-explore",
     step: "01",
     icon: BookOpen,
-    title: "Khám phá Cổ phục",
+    title: "Khám phá 5 Cổ phục",
     description:
-      "Duyệt qua 5 nhóm cổ phục Việt Nam — từ Ngũ Thân triều đại đến Áo Dài tân thời. Tìm hiểu lịch sử, triết lý và phong cách.",
+      "Duyệt qua 5 nhóm cổ phục Việt Nam chuẩn mực — từ Ngũ Thân, Áo Tấc, Nhật Bình đến Tứ Thân và Áo Dài tân thời. Tìm hiểu lịch sử và ý nghĩa sâu sắc.",
     color: "#1E3A5F",
   },
   {
     id: "step-style",
     step: "02",
     icon: Wand2,
-    title: "AI Gợi ý Phối đồ",
+    title: "AI Phối đồ theo Ngữ cảnh",
     description:
-      "Mô tả ngữ cảnh của bạn — đi dạo phố, lễ hội, hay chụp ảnh — AI sẽ đề xuất combination hoàn hảo từ cổ phục đến phụ kiện.",
+      "Lựa chọn sắc tố da cá nhân và ngữ cảnh của bạn (Văn Miếu, Kỷ yếu, Dạo phố, Đám cưới...). AI đề xuất phối hợp hoàn hảo giữa cổ phục và phụ kiện hiện đại.",
     color: "#9E2A2B",
   },
   {
     id: "step-verify",
     step: "03",
     icon: ShieldCheck,
-    title: "Kiểm định Văn hóa",
+    title: "Màng lọc Chuẩn mực Văn hóa",
     description:
-      "Mỗi gợi ý đều được kiểm tra tính phù hợp văn hóa — hệ thống 3 màu (Xanh/Vàng/Đỏ) giúp bạn mặc đúng và mặc đẹp.",
+      "Mỗi phối set đều được kiểm tra tính phù hợp di sản — hệ thống 3 màu (Xanh/Vàng/Đỏ) hỗ trợ 1-Click Fix giúp bạn tự tin mặc đúng và mặc đẹp.",
     color: "#16A34A",
   },
 ] as const;
@@ -78,7 +87,7 @@ function SiteHeader() {
   return (
     <header
       id="site-header"
-      className="sticky top-0 z-50 border-b border-[#E5DECE]/60 bg-[#FAF8F5]/90 backdrop-blur-md"
+      className="sticky top-0 z-50 border-b border-[#E5DECE]/70 bg-[#FAF8F5]/90 backdrop-blur-md"
       role="banner"
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -99,8 +108,8 @@ function SiteHeader() {
           <span className="font-playfair text-lg font-bold text-[#1E3A5F]">
             Sắc Việt
           </span>
-          <span className="hidden text-sm font-medium text-[#D4AF37] sm:inline">
-            AI Stylist
+          <span className="hidden text-xs font-semibold text-[#D4AF37] sm:inline">
+            Stylist
           </span>
         </Link>
 
@@ -112,10 +121,10 @@ function SiteHeader() {
         >
           <ul className="flex items-center gap-6" role="list">
             {[
-              { href: "/co-phuc", label: "Cổ Phục" },
-              { href: "/stylist", label: "AI Stylist" },
-              { href: "/di-san", label: "Di Sản" },
-              { href: "/blog", label: "Blog" },
+              { href: "#heritage-grid", label: "5 Cổ Phục" },
+              { href: "#lookbook-preview", label: "Lookbook" },
+              { href: "#how-it-works", label: "Cách Hoạt Động" },
+              { href: "/stylist", label: "AI Studio" },
             ].map(({ href, label }) => (
               <li key={href}>
                 <Link
@@ -133,11 +142,11 @@ function SiteHeader() {
         <Link
           id="nav-cta"
           href="/stylist"
-          className="inline-flex items-center gap-1.5 rounded-full bg-[#9E2A2B] px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#7D2020] hover:shadow-md"
+          className="inline-flex items-center gap-1.5 rounded-full bg-[#9E2A2B] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all duration-200 hover:bg-[#7D1F20] hover:shadow-md"
           aria-label="Bắt đầu sử dụng AI Stylist"
         >
           <Wand2 className="h-3.5 w-3.5" aria-hidden="true" />
-          Dùng thử AI
+          <span>Thử Ngay</span>
         </Link>
       </div>
     </header>
@@ -154,9 +163,10 @@ function HowItWorks() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <header className="mb-14 text-center">
-          <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#9E2A2B]">
-            Cách Hoạt Động
-          </p>
+          <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-[#FAF8F5] px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-[#9E2A2B] border border-[#E5DECE]">
+            <Compass className="h-3.5 w-3.5 text-[#D4AF37]" />
+            Quy Trình Sáng Tạo
+          </div>
           <h2
             id="how-it-works-heading"
             className="font-playfair text-3xl font-bold text-[#1E3A5F] sm:text-4xl"
@@ -164,8 +174,7 @@ function HowItWorks() {
             3 Bước Đến Phong Cách Di Sản
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base text-[#4A6A8F]">
-            Đơn giản, thông minh và tôn trọng văn hóa — quy trình được thiết
-            kế dành riêng cho thế hệ Gen Z Việt Nam.
+            Đơn giản, thông minh và tôn trọng văn hóa — quy trình được thiết kế dành riêng cho thế hệ Gen Z Việt Nam.
           </p>
         </header>
 
@@ -181,7 +190,7 @@ function HowItWorks() {
                 id={step.id}
                 className="relative flex flex-col items-start gap-4 rounded-2xl border border-[#E5DECE] bg-[#FAF8F5] p-7 transition-shadow duration-300 hover:shadow-xl"
               >
-                {/* Connector arrow between steps */}
+                {/* Connector arrow between steps on desktop */}
                 {index < HOW_IT_WORKS.length - 1 && (
                   <div
                     className="absolute -right-4 top-1/2 z-10 hidden -translate-y-1/2 text-[#D4AF37] md:block"
@@ -262,7 +271,7 @@ function CulturalPromise() {
         <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-[#94A3B8]">
           Sắc Việt AI Stylist xây dựng hệ thống Cultural Guardrail để đảm bảo
           mỗi gợi ý phối đồ đều tôn trọng chiều sâu lịch sử. Chúng tôi tin rằng
-          mặc đẹp và mặc đúng văn hóa có thể song hành.
+          mặc đẹp và mặc đúng văn hóa hoàn toàn có thể song hành.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
@@ -272,15 +281,15 @@ function CulturalPromise() {
             className="inline-flex items-center gap-2 rounded-full bg-[#D4AF37] px-8 py-3.5 text-sm font-bold text-[#1E3A5F] transition-all duration-300 hover:bg-[#E8CC6E] hover:shadow-lg hover:shadow-[#D4AF37]/30"
             aria-label="Trải nghiệm AI Stylist ngay"
           >
-            Trải nghiệm ngay
+            <span>Trải nghiệm ngay</span>
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
           <Link
             id="promise-learn"
-            href="/di-san"
+            href="#heritage-grid"
             className="inline-flex items-center gap-2 rounded-full border border-white/20 px-8 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:border-white/40 hover:bg-white/10"
           >
-            Tìm hiểu Di sản
+            <span>Tìm hiểu 5 Cổ phục</span>
           </Link>
         </div>
       </div>
@@ -314,7 +323,7 @@ function SiteFooter() {
               </span>
             </Link>
             <p className="mt-3 text-xs leading-relaxed text-[#6B7280]">
-              Nền tảng AI tôn vinh cổ phục Việt Nam — nơi di sản gặp gỡ đương đại.
+              Nền tảng AI tư vấn phối cổ phục Việt Nam đương đại — Nơi di sản ngàn năm giao hòa cùng phong cách trẻ.
             </p>
           </div>
 
@@ -323,24 +332,24 @@ function SiteFooter() {
             {
               title: "Khám phá",
               links: [
-                { href: "/co-phuc", label: "Danh mục Cổ phục" },
-                { href: "/stylist", label: "AI Stylist" },
-                { href: "/di-san", label: "Di Sản" },
+                { href: "#heritage-grid", label: "5 Nhóm Cổ Phục" },
+                { href: "#lookbook-preview", label: "Bộ Sưu Tập Lookbook" },
+                { href: "/stylist", label: "Studio Phối Đồ AI" },
               ],
             },
             {
-              title: "Tìm hiểu",
+              title: "Tài liệu",
               links: [
-                { href: "/blog", label: "Blog" },
-                { href: "/huong-dan", label: "Hướng dẫn" },
-                { href: "/ve-chung-toi", label: "Về chúng tôi" },
+                { href: "#how-it-works", label: "Hướng dẫn sử dụng" },
+                { href: "#cultural-promise", label: "Chuẩn mực văn hóa" },
+                { href: "/stylist", label: "Trắc nghiệm tông da" },
               ],
             },
             {
-              title: "Pháp lý",
+              title: "Cuộc thi",
               links: [
-                { href: "/chinh-sach", label: "Chính sách" },
-                { href: "/dieu-khoan", label: "Điều khoản" },
+                { href: "/", label: "Việt Phục Remix 2026" },
+                { href: "/stylist", label: "Tạo bài thi Lookbook" },
               ],
             },
           ].map(({ title, links }) => (
@@ -364,13 +373,21 @@ function SiteFooter() {
           ))}
         </div>
 
-        {/* Copyright */}
-        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-[#E5DECE] pt-6 sm:flex-row">
-          <p className="text-xs text-[#6B7280]">
-            © 2026 Sắc Việt AI Stylist. Mọi quyền được bảo lưu.
+        {/* ── AI Cultural Disclaimer Credit (bắt buộc) ── */}
+        <div className="mt-10 border-t border-[#E5DECE] pt-6">
+          <p className="text-center text-xs italic text-[#4A6A8F]/90 sm:text-left">
+            Ảnh minh họa do AI tạo (Google Gemini), đã đối chiếu tài liệu văn hóa.
           </p>
-          <p className="text-xs text-[#D4AF37]">
-            ✦ Được tạo với tình yêu dành cho Di sản Việt Nam
+        </div>
+
+        {/* Copyright & Sign-off */}
+        <div className="mt-4 flex flex-col items-center justify-between gap-4 border-t border-[#E5DECE]/60 pt-4 sm:flex-row">
+          <p className="text-xs text-[#6B7280]">
+            © 2026 Sắc Việt AI Stylist · Dự án tham dự cuộc thi &quot;Việt phục Remix&quot;. Mọi quyền được bảo lưu.
+          </p>
+          <p className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D4AF37]">
+            <Sparkles className="h-3.5 w-3.5" />
+            Được tạo với tình yêu dành cho Di sản Việt Nam
           </p>
         </div>
       </div>
@@ -382,28 +399,40 @@ function SiteFooter() {
 export default function HomePage() {
   return (
     <>
-      {/* JSON-LD structured data — injected into document head via React */}
+      {/* JSON-LD structured data */}
       <HomePageJsonLd />
 
-      {/* Site header — sticky navigation */}
+      {/* Site header */}
       <SiteHeader />
 
       {/* Main content */}
       <main id="main-content" role="main">
-        {/* Hero section — LCP target element */}
+        {/* ① Hero section — phong cách editorial tạp chí với hero-editorial.png */}
         <HeroSection />
 
-        {/* Heritage costume grid */}
+        {/* Section divider */}
+        <div className="gold-rule" aria-hidden="true" />
+
+        {/* ② Lưới 5 cổ phục chuẩn hóa kết hợp ImageSlot & getFlatlay */}
         <HeritageTopicGrid />
 
-        {/* How it works — process flow */}
+        {/* Section divider */}
+        <div className="gold-rule" aria-hidden="true" />
+
+        {/* ③ Lookbook Preview Section — 6 looks nổi bật scroll ngang */}
+        <LookbookPreview />
+
+        {/* Section divider */}
+        <div className="gold-rule" aria-hidden="true" />
+
+        {/* ④ How it works — quy trình 3 bước */}
         <HowItWorks />
 
-        {/* Cultural promise / CTA section */}
+        {/* ⑤ Cultural promise — cam kết văn hóa */}
         <CulturalPromise />
       </main>
 
-      {/* Site footer */}
+      {/* Site footer with AI disclaimer credit */}
       <SiteFooter />
     </>
   );

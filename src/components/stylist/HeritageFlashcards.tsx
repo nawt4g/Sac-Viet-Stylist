@@ -4,17 +4,29 @@
  * components/stylist/HeritageFlashcards.tsx
  * ==========================================
  * Màn hình chờ thông minh khi isProcessing = true.
- * Xoay vòng các câu đố / tri thức di sản Việt mỗi 2 giây.
+ * Xoay vòng các câu đố & tri thức di sản Việt mỗi 2 giây.
  *
- * Features:
- *   - Auto-advance every 2s
- *   - Animated progress bar
- *   - Simulated 5s processing then dispatch STOP_PROCESSING
- *   - Gold shimmer on card transition
+ * Polish:
+ *   - Thay thế toàn bộ emoji bằng icon Lucide.
+ *   - Viền vàng kim #D4AF37, background .paper-bg, thanh tiến trình mềm mại.
+ *   - Touch target tối thiểu 44px cho nút lật thẻ.
  */
 
-import { useEffect, useState, useCallback } from "react";
-import { Loader2, BookOpen } from "lucide-react";
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  Loader2,
+  BookOpen,
+  HelpCircle,
+  Sparkles,
+  Palette,
+  Leaf,
+  Landmark,
+  Award,
+  Shirt,
+  Lightbulb,
+  ArrowRight,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useStylist } from "@/context/StylistContext";
 
 /* ── Heritage knowledge data ── */
@@ -24,7 +36,7 @@ interface Flashcard {
   question?: string;
   answer?: string;
   content: string;
-  emoji: string;
+  icon: LucideIcon;
   source?: string;
 }
 
@@ -32,64 +44,64 @@ const FLASHCARDS: Flashcard[] = [
   {
     id: "fc-1",
     type: "fact",
-    emoji: "👘",
+    icon: Shirt,
     content:
-      "Áo Ngũ Thân có 5 vạt tượng trưng cho Ngũ Luân — 5 mối quan hệ trong Nho giáo Việt: quân-thần, phụ-tử, phu-phụ, huynh-đệ, bằng hữu.",
+      "Áo Ngũ Thân có 5 vạt tượng trưng cho Ngũ Luân — 5 mối quan hệ trong đạo lý truyền thống: quân-thần, phụ-tử, phu-phụ, huynh-đệ, bằng hữu.",
     source: "Lê Quý Đôn — Phủ Biên Tạp Lục",
   },
   {
     id: "fc-2",
     type: "quiz",
-    emoji: "🧠",
-    question: "Tại sao Áo Nhật Bình có cổ vuông?",
+    icon: HelpCircle,
+    question: "Tại sao Áo Nhật Bình lại có hình cổ áo vuông?",
     answer:
-      "Cổ vuông (chữ nhật) của Nhật Bình tượng trưng cho \"đất\" trong triết lý Thiên-Địa-Nhân — đối lập với cổ tròn của vua (tượng trưng cho trời).",
-    content: "Nhấn để xem đáp án",
+      "Dải cổ áo hình chữ nhật của Nhật Bình tượng trưng cho quẻ Khôn (Đất) trong triết lý Thiên - Địa - Nhân, biểu trưng cho đức hạnh và sự vững chãi.",
+    content: "Nhấn để xem giải đáp",
   },
   {
     id: "fc-3",
     type: "fact",
-    emoji: "🎨",
+    icon: Palette,
     content:
-      "Màu vàng trong cổ phục Việt thuộc về hoàng tộc dưới thời Nguyễn. Người dân bình thường mặc tông lam, nâu, đen. Nay màu vàng đã được tự do hóa trong ứng dụng đương đại.",
-    source: "Viện Nghiên cứu Văn hóa Quốc gia",
+      "Thời Nguyễn, màu vàng chính sắc thuộc về hoàng tộc. Dân gian mặc tông màu trầm thanh nhã như xanh chàm, nâu non, đen tuyền. Ngày nay, mọi sắc màu đều được tự do sáng tạo.",
+    source: "Viện Nghiên cứu Di sản Văn hóa",
   },
   {
     id: "fc-4",
     type: "story",
-    emoji: "📖",
+    icon: BookOpen,
     content:
-      "Áo Tứ Thân gắn liền với hình ảnh người phụ nữ Bắc Bộ — 4 vạt và dải lụa buộc chéo thể hiện sự khéo léo, đảm đang. Thường mặc khi hát Quan họ Bắc Ninh.",
+      "Áo Tứ Thân gắn liền với người phụ nữ đồng bằng Kinh Bắc — 4 vạt áo mềm mại cùng dải lụa thắt lưng đào thể hiện sự khéo léo, duyên dáng trong điệu hát Quan họ.",
   },
   {
     id: "fc-5",
     type: "fact",
-    emoji: "🌿",
+    icon: Leaf,
     content:
-      "Lụa tơ tằm Hà Đông nổi tiếng từ thế kỷ 13. Chất lụa mỏng nhẹ, thoáng mát vào mùa hè và ấm áp vào mùa đông — lý tưởng cho cổ phục mọi mùa.",
+      "Lụa tơ tằm Vạn Phúc - Hà Đông nức tiếng từ thế kỷ 13. Sợi tơ dệt thủ công thoáng mát vào mùa hạ và giữ ấm vào mùa đông — chất liệu di sản lý tưởng cho cổ phục.",
   },
   {
     id: "fc-6",
     type: "quiz",
-    emoji: "🏛️",
-    question: "Khi thăm Văn Miếu, trang phục nào KHÔNG phù hợp?",
+    icon: Landmark,
+    question: "Khi đến Văn Miếu Quốc Tử Giám, trang phục nào CẦN LƯU Ý?",
     answer:
-      "Quần short, váy ngắn trên gối, trang phục hở vai và màu sắc quá sặc sỡ đều không phù hợp. Nên mặc kín đáo, màu trầm thể hiện sự tôn kính.",
-    content: "Nhấn để xem đáp án",
+      "Quần short, váy ngắn trên đầu gối và áo trễ vai không phù hợp với chốn tôn nghiêm. Cổ phục tay chẽn hoặc áo dài phối kín đáo là lựa chọn hoàn hảo nhất.",
+    content: "Nhấn để xem giải đáp",
   },
   {
     id: "fc-7",
     type: "fact",
-    emoji: "✦",
+    icon: Sparkles,
     content:
-      "Phong trào Cổ phục Việt bùng nổ từ 2018 — thế hệ Gen Z Việt Nam là lực lượng tiên phong đưa cổ phục trở lại đời sống đương đại qua mạng xã hội.",
+      "Phong trào Cổ phục Việt đương đại bùng nổ mạnh mẽ nhờ thế hệ Gen Z — những người trẻ tiên phong remix di sản vào đời sống học đường và nghệ thuật.",
   },
   {
     id: "fc-8",
     type: "story",
-    emoji: "🦢",
+    icon: Award,
     content:
-      "Chim Phượng Hoàng thêu trên Áo Nhật Bình tượng trưng cho phẩm giá, đức hạnh và vẻ đẹp của người phụ nữ. Mỗi đường thêu được thực hiện thủ công, mất hàng tuần.",
+      "Đồ án Phượng Hoàng thêu trên Áo Nhật Bình tượng trưng cho sự thanh cao, trí tuệ và đức hạnh của phụ nữ Việt. Từng đường chỉ kim tuyến đều được thêu tay tỉ mỉ.",
   },
 ];
 
@@ -102,17 +114,21 @@ function ProgressDots({
   current: number;
 }) {
   return (
-    <div className="flex items-center justify-center gap-1.5" role="tablist" aria-label="Thẻ tri thức">
+    <div
+      className="flex items-center justify-center gap-1.5"
+      role="tablist"
+      aria-label="Chỉ số thẻ tri thức"
+    >
       {Array.from({ length: total }).map((_, i) => (
         <div
           key={i}
           role="tab"
           aria-selected={i === current}
-          aria-label={`Thẻ ${i + 1}${i === current ? " — đang hiển thị" : ""}`}
+          aria-label={`Thẻ tri thức ${i + 1}${
+            i === current ? " — đang hiển thị" : ""
+          }`}
           className={`rounded-full transition-all duration-300 ${
-            i === current
-              ? "h-2 w-6 bg-[#D4AF37]"
-              : "h-2 w-2 bg-[#E5DECE]"
+            i === current ? "h-2 w-6 bg-[#D4AF37]" : "h-2 w-2 bg-[#E5DECE]"
           }`}
         />
       ))}
@@ -120,7 +136,7 @@ function ProgressDots({
   );
 }
 
-/* ── Flashcard component ── */
+/* ── Flashcard Component ── */
 function FlashcardDisplay({
   card,
   onFlip,
@@ -132,18 +148,27 @@ function FlashcardDisplay({
 }) {
   const isQuiz = card.type === "quiz";
   const showAnswer = isQuiz && flipped;
+  const CardIcon = card.icon;
 
   return (
     <div
-      className="w-full max-w-lg rounded-2xl border border-[#D4AF37]/30 bg-white p-7 shadow-xl shadow-[#D4AF37]/10"
+      className="w-full max-w-lg rounded-2xl border border-[#D4AF37]/35 bg-white p-7 shadow-xl shadow-[#D4AF37]/10"
       role="region"
-      aria-label={`Thẻ tri thức: ${card.type === "quiz" ? "Câu đố" : card.type === "fact" ? "Sự kiện" : "Câu chuyện"}`}
+      aria-label={`Thẻ tri thức: ${
+        card.type === "quiz"
+          ? "Câu đố"
+          : card.type === "fact"
+          ? "Tri thức"
+          : "Câu chuyện"
+      }`}
     >
       {/* Type badge */}
-      <div className="mb-4 flex items-center gap-2">
-        <span className="text-2xl" aria-hidden="true">{card.emoji}</span>
+      <div className="mb-4 flex items-center gap-2.5">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FAF8F5] text-[#9E2A2B] border border-[#E5DECE]">
+          <CardIcon className="h-4 w-4" />
+        </div>
         <span
-          className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest ${
+          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
             card.type === "quiz"
               ? "bg-[#FEF3C7] text-[#D97706]"
               : card.type === "fact"
@@ -152,10 +177,10 @@ function FlashcardDisplay({
           }`}
         >
           {card.type === "quiz"
-            ? "🧠 Câu đố"
+            ? "Câu đố di sản"
             : card.type === "fact"
-            ? "✦ Tri thức"
-            : "📖 Câu chuyện"}
+            ? "Tri thức cổ phục"
+            : "Điển tích văn hóa"}
         </span>
       </div>
 
@@ -167,23 +192,25 @@ function FlashcardDisplay({
           </p>
           {showAnswer ? (
             <div className="mt-4 rounded-xl border border-[#D4AF37]/30 bg-[#D4AF37]/10 p-4">
-              <p className="text-sm leading-relaxed text-[#1E3A5F]">
-                💡 {card.answer}
+              <p className="flex items-start gap-2 text-sm leading-relaxed text-[#1E3A5F]">
+                <Lightbulb className="h-4 w-4 text-[#D97706] shrink-0 mt-0.5" />
+                <span>{card.answer}</span>
               </p>
             </div>
           ) : (
             <button
               type="button"
               onClick={onFlip}
-              className="mt-4 flex min-h-[44px] items-center justify-center gap-2 rounded-xl border border-[#D4AF37]/40 bg-[#FAF8F5] px-4 py-2.5 text-sm font-medium text-[#D4AF37] transition-all hover:bg-[#D4AF37]/10 focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
-              aria-label="Lật thẻ để xem đáp án"
+              className="mt-4 flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-[#D4AF37]/50 bg-[#FAF8F5] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[#9E2A2B] transition-all hover:bg-[#D4AF37]/15 focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
+              aria-label="Lật thẻ để xem giải đáp"
             >
-              Lật thẻ xem đáp án →
+              <span>Lật thẻ xem giải đáp</span>
+              <ArrowRight className="h-3.5 w-3.5" />
             </button>
           )}
         </div>
       ) : (
-        <p className="text-base leading-relaxed text-[#4A6A8F]">
+        <p className="text-sm leading-relaxed text-[#4A6A8F] sm:text-base">
           {card.content}
         </p>
       )}
@@ -203,14 +230,14 @@ export function HeritageFlashcards() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [elapsed, setElapsed] = useState(0); // seconds elapsed
-  const TOTAL_DURATION = 6; // seconds before auto-complete
+  const TOTAL_DURATION = 5; // seconds before completion
 
-  // Auto-advance flashcard every 2s
+  // Auto-advance flashcard every 2.2s
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % FLASHCARDS.length);
       setFlipped(false);
-    }, 2000);
+    }, 2200);
     return () => clearInterval(interval);
   }, []);
 
@@ -220,87 +247,79 @@ export function HeritageFlashcards() {
       setElapsed((prev) => {
         if (prev >= TOTAL_DURATION) {
           clearInterval(timer);
-          dispatch({ type: "STOP_PROCESSING" });
-          return prev;
+          return TOTAL_DURATION;
         }
-        return prev + 0.1;
+        return prev + 1;
       });
-    }, 100);
+    }, 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Auto complete after TOTAL_DURATION
+  const handleDone = useCallback(() => {
+    dispatch({ type: "STOP_PROCESSING" });
   }, [dispatch]);
 
-  const progressPercent = Math.min((elapsed / TOTAL_DURATION) * 100, 100);
+  useEffect(() => {
+    if (elapsed >= TOTAL_DURATION) {
+      handleDone();
+    }
+  }, [elapsed, handleDone]);
+
   const currentCard = FLASHCARDS[currentIndex];
+  const progressPercent = Math.min((elapsed / TOTAL_DURATION) * 100, 100);
 
   return (
     <div
-      className="flex min-h-[60vh] flex-col items-center justify-center gap-8 px-4 py-12"
-      role="status"
+      className="paper-bg flex min-h-[500px] flex-col items-center justify-center gap-8 rounded-2xl border border-[#E5DECE] bg-[#FAF8F5] p-6 text-center shadow-inner sm:p-10"
       aria-live="polite"
-      aria-label="Đang tạo gợi ý phối đồ — đang tải"
+      aria-label="Đang tổng hợp phong cách và kiểm định văn hóa"
+      role="status"
     >
-      {/* Spinner + title */}
-      <div className="text-center">
-        <div className="relative mx-auto mb-5 flex h-16 w-16 items-center justify-center">
-          <div
-            className="absolute inset-0 rounded-full border-4 border-[#D4AF37]/20"
-            aria-hidden="true"
-          />
-          <Loader2
-            className="h-8 w-8 animate-spin text-[#D4AF37]"
-            aria-hidden="true"
-          />
+      {/* Loading header */}
+      <div className="flex flex-col items-center gap-3">
+        <div className="relative flex h-16 w-16 items-center justify-center">
+          <Loader2 className="h-16 w-16 animate-spin text-[#D4AF37]" strokeWidth={1.5} />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Sparkles className="h-6 w-6 text-[#9E2A2B]" />
+          </div>
         </div>
-        <h2 className="font-playfair text-xl font-bold text-[#1E3A5F]">
-          Đang Dệt Gợi Ý Của Bạn
-        </h2>
-        <p className="mt-2 text-sm text-[#4A6A8F]">
-          AI đang kiểm định văn hóa và tạo phong cách phù hợp nhất…
-        </p>
+
+        <div>
+          <h2 className="font-playfair text-2xl font-bold text-[#1E3A5F]">
+            Đang Dệt Phong Cách Di Sản
+          </h2>
+          <p className="mt-1 text-xs text-[#4A6A8F]">
+            AI đang phân tích quy thức trang phục và tính toán điểm số Cultural Guardrail…
+          </p>
+        </div>
       </div>
 
-      {/* Progress bar */}
-      <div
-        className="w-full max-w-lg"
-        role="progressbar"
-        aria-valuenow={Math.round(progressPercent)}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-label={`Tiến trình xử lý: ${Math.round(progressPercent)}%`}
-      >
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs text-[#6B7280]">Đang phân tích…</span>
-          <span className="text-xs font-semibold text-[#D4AF37]">
-            {Math.round(progressPercent)}%
-          </span>
+      {/* Progress Bar */}
+      <div className="w-full max-w-md">
+        <div className="flex justify-between text-[11px] font-semibold text-[#4A6A8F] mb-1.5">
+          <span>Tiến trình hoàn tất</span>
+          <span className="text-[#D4AF37]">{Math.round(progressPercent)}%</span>
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-[#E5DECE]">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-[#9E2A2B] to-[#D4AF37] transition-all duration-100 ease-linear"
+            className="h-full rounded-full bg-gradient-to-r from-[#9E2A2B] via-[#D4AF37] to-[#E8CC6E] transition-all duration-1000 ease-linear shadow-xs"
             style={{ width: `${progressPercent}%` }}
-            aria-hidden="true"
           />
         </div>
       </div>
 
-      {/* Flashcard */}
+      {/* Flashcard container */}
       <FlashcardDisplay
         card={currentCard}
         flipped={flipped}
-        onFlip={() => setFlipped(true)}
+        onFlip={() => setFlipped((prev) => !prev)}
       />
 
-      {/* Progress dots */}
+      {/* Progress dots indicator */}
       <ProgressDots total={FLASHCARDS.length} current={currentIndex} />
-
-      {/* Knowledge counter */}
-      <div className="flex items-center gap-2 rounded-full border border-[#E5DECE] bg-white px-4 py-2">
-        <BookOpen className="h-3.5 w-3.5 text-[#D4AF37]" aria-hidden="true" />
-        <span className="text-xs text-[#6B7280]">
-          Bạn đang đọc thẻ tri thức{" "}
-          <strong className="text-[#1E3A5F]">{currentIndex + 1}/{FLASHCARDS.length}</strong>
-        </span>
-      </div>
     </div>
   );
 }
+
+export default HeritageFlashcards;

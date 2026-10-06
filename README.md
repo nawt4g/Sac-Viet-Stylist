@@ -1,77 +1,85 @@
-# 🪷 SẮC VIỆT STYLIST 
+# 🪷 SẮC VIỆT STYLIST — VIỆT PHỤC REMIX
+
+> Nền tảng khám phá, phối đồ và giải mã văn hóa cổ phục Việt Nam dành cho thế hệ trẻ — Cuộc thi **"Việt phục Remix"**.
 
 ---
 
 ## 🌟 Tính năng Cốt lõi (Core Features)
 
-1. **🎨 Phân tích sắc tố da (Undertone AI):** Sử dụng Gemini 1.5 Multimodal để đọc ảnh selfie, phân tích sắc tố da (Warm/Cool/Neutral) và đề xuất bảng màu cổ phục tôn vinh diện mạo người mặc.
-2. **🛡️ Màng lọc Văn hóa (Cultural Guardrails):** Hệ thống tự động đối soát quy thức (ví dụ: vạt phải đè vạt trái, quy tắc ăn mặc nơi tôn nghiêm) và cảnh báo rủi ro qua 3 cấp độ `(Xanh - Vàng - Đỏ)` kèm tính năng **1-Click Fix** (Tự động sửa lỗi văn hóa).
-3. **👗 Visual Mockup Studio:** Khởi tạo ảnh phối đồ toàn thân chất lượng cao qua engine AI (Flux) với độ trễ thấp, hỗ trợ tính năng thanh trượt so sánh A/B trực quan.
-4. **📜 Thẻ Di sản Kỹ thuật số (Heritage Card):** Trải nghiệm thẻ lật 3D giải mã ý nghĩa đồ án hoa văn, triều đại và điển tích lịch sử của từng món trang phục.
-5. **📸 Xuất thẻ Lookbook:** Render trực tiếp DOM thành ảnh tỉ lệ 9:16 trên máy người dùng, sẵn sàng chia sẻ lên Instagram Story / TikTok chỉ bằng 1 chạm.
+1. **🎨 Phân tích sắc tố da & gợi ý bảng màu:** Phân tích sắc tố người dùng (Warm/Cool/Neutral) và gợi ý phối màu cổ phục tôn dáng, tôn da theo phong cách Ngũ Hành và truyền thống Việt.
+2. **🛡️ Màng lọc Văn hóa (Cultural Guardrails):** Hệ thống tự động đối soát quy thức trang phục (quy tắc vạt áo, độ trang trọng theo ngữ cảnh tôn nghiêm/đời thường) với 3 cấp độ cảnh báo trực quan `Xanh - Vàng - Đỏ` kèm nút **1-Click Fix** (Tự động sửa lỗi văn hóa nhanh).
+3. **👗 Studio Phối đồ Trực tiếp (Live Preview & Visual Breakdown):** Hiển thị trực quan look phối đồ và flatlay trang sức, phụ kiện. Hỗ trợ so sánh phương án A/B và phân tích chi tiết từng lớp trang phục.
+4. **📜 Thẻ Di sản Kỹ thuật số (Heritage Card 3D):** Trải nghiệm thẻ lật 3D giải mã ý nghĩa đồ án hoa văn, triều đại và điển tích lịch sử của từng món phục trang.
+5. **📸 Xuất thẻ Lookbook:** Render trực tiếp DOM thành ảnh tỉ lệ 9:16 trên thiết bị người dùng, sẵn sàng chia sẻ lên Story mạng xã hội chỉ với 1 chạm.
 
 ---
 
 ## 🛠️ Ngăn xếp Công nghệ (Tech Stack)
 
-Dự án được kiến trúc theo mô hình **Zero-Cost Serverless**, đảm bảo chi phí vận hành 0đ nhưng vẫn mang lại hiệu suất tối đa.
+Dự án được xây dựng trên nền tảng công nghệ hiện đại nhất:
 
-- **Framework chính:** Next.js 14 (App Router) + React 18 + TypeScript.
-- **UI & Giao diện:** 
-  - [Tailwind CSS](https://tailwindcss.com/) (Hệ thống lưới và Utility-first CSS).
-  - [shadcn/ui](https://ui.shadcn.com/) (Bộ component xây dựng sẵn có thể tùy biến).
-  - [Framer Motion](https://www.framer.com/motion/) (Xử lý animation, hiệu ứng lật thẻ 3D).
-  - [Lucide React](https://lucide.dev/) (Bộ icon SVG tinh gọn).
-- **Trí tuệ Nhân tạo (AI):**
-  - **Logic & Guardrails:** `@google/genai` (Sử dụng model *Gemini 1.5 Flash*).
-  - **Image Generation:** [Pollinations.ai](https://pollinations.ai/) (API sinh ảnh Flux 0đ không cần đăng ký).
-- **Thư viện Hỗ trợ:**
-  - `html-to-image`: Chụp ảnh DOM thẻ Lookbook.
-  - `canvas-confetti`: Hiệu ứng chúc mừng khi tạo thành công bộ đồ hợp chuẩn.
-- **Triển khai (Deployment):** Vercel (Hobby Tier).
+- **Framework:** [Next.js 16](https://nextjs.org/) (App Router & Turbopack)
+- **Core Library:** [React 19](https://react.dev/) + TypeScript
+- **Styling:** [Tailwind CSS v4](https://tailwindcss.com/) (Khai báo token thiết kế Neo-Heritage trực tiếp trong `@theme` tại `globals.css`)
+- **UI Components:** [shadcn/ui](https://ui.shadcn.com/)
+- **Animation:** [Framer Motion](https://www.framer.com/motion/) (Tự động thích ứng với thiết lập `prefers-reduced-motion`)
+- **Icons:** [Lucide React](https://lucide.dev/) (Chuẩn hóa toàn bộ icon hệ thống, loại bỏ hoàn toàn emoji)
+- **DOM to Image:** `html-to-image` (Xuất thẻ Lookbook chất lượng cao trên client-side)
 
 ---
 
-## 📁 Cấu trúc Thư mục Hệ thống (Project Directory)
+## 🖼️ Hướng dẫn Quản lý & Đồng bộ Ảnh (Dành cho Giám khảo & Lập trình viên)
 
-Toàn bộ mã nguồn dự án được tổ chức chặt chẽ bên trong thư mục `src/`:
+Dự án trang bị sẵn hệ thống Manifest hình ảnh tự động (`src/data/imageManifest.ts`) và cơ chế Fallback mượt mà (Zero Layout Shift) thông qua `ImageSlot`:
+
+### Thêm ảnh mới vào dự án:
+1. Thả các file ảnh `.webp` hoặc `.png` trực tiếp vào thư mục `public/images/`.
+2. Quy ước đặt tên file chuẩn hóa theo cú pháp:
+   - Ảnh look người mẫu: `[costume-id]-[color]-[context-id].webp` *(Ví dụ: `ao-ngu-than-navy-dao-pho.webp`)*
+   - Ảnh flatlay trang phục: `flatlay-[costume-id].webp` *(Ví dụ: `flatlay-ao-ngu-than.webp`)*
+   - Ảnh bối cảnh: `scene-[context-id].webp` *(Ví dụ: `scene-van-mieu.webp`)*
+   - Ảnh phụ kiện: `acc-[accessory-id].webp` *(Ví dụ: `acc-khan-van-nam.webp`)*
+
+### Chạy lệnh đồng bộ tự động:
+Sau khi thêm ảnh mới, chạy lệnh sau trong terminal:
+```bash
+npm run images:sync
+```
+Lệnh này kích hoạt script `scripts/sync-images.mjs` quét thư mục `public/images/`, tự động cập nhật cờ `available: true` trong `src/data/imageManifest.ts` mà không cần cấu hình thủ công.
+
+---
+
+## 📁 Cấu trúc Thư mục Dự án
 
 ```text
-sac-viet-ai-stylist/
-├── public/                 # Chứa tài nguyên tĩnh (không qua xử lý webpack)
-│   ├── assets/             # Ảnh tĩnh: costumes (áo mẫu), fallbacks, patterns
-│   └── audio/              # Chứa file nhạc demo lofi ca trù
-│
+Sac-Viet-Stylist/
+├── public/                 # Tài nguyên tĩnh
+│   ├── images/             # Ảnh phục trang, flatlay, phụ kiện và bối cảnh
+│   └── hero-editorial.png  # Ảnh banner Hero tạp chí nghệ thuật
+├── scripts/
+│   └── sync-images.mjs     # Script tự động quét và đồng bộ Image Manifest
 ├── src/
-│   ├── app/                # 🌐 NƠI ĐỊNH TUYẾN & CHỨA API ROUTER
-│   │   ├── api/            # (Backend) Chứa các route: /analyze-skin, /cultural-guardrail, /generate-mockup
-│   │   ├── stylist/        # (Frontend) Trang làm việc chính chứa luồng phối đồ 3 bước
-│   │   ├── layout.tsx      # Layout gốc của toàn ứng dụng
-│   │   └── page.tsx        # Landing page giới thiệu (Hero section)
-│   │
-│   ├── components/         # 🧩 NƠI CHỨA CÁC KHỐI GIAO DIỆN (UI COMPONENTS)
-│   │   ├── common/         # Các khối dùng chung (Header, Footer, Stepper)
-│   │   ├── results/        # Các khối kết quả (Visual Mockup, Heritage Card, Guardrail Badge)
-│   │   ├── ui/             # Các component cơ bản sinh ra từ shadcn/ui (Button, Card, Badge...)
-│   │   └── wizard/         # Các form thuộc 3 bước cấu hình phối đồ
-│   │
-│   ├── config/             # 🗄️ NƠI CHỨA DỮ LIỆU TĨNH & CẤU HÌNH
-│   │   ├── costumes.ts     # Dữ liệu tĩnh của 5 nhóm cổ phục & Triều đại
-│   │   └── rules.ts        # Tập hợp quy tắc cho Màng lọc văn hóa
-│   │
-│   ├── context/            # 🧠 NƠI QUẢN LÝ STATE GLOBAL
-│   │   └── StylistContext.tsx # Quản lý trạng thái luồng phối đồ xuyên suốt
-│   │
-│   ├── hooks/              # 🪝 NƠI CHỨA CUSTOM HOOKS (Logic React)
-│   │   └── useMockupGenerator.ts
-│   │
-│   ├── lib/                # ⚙️ NƠI CHỨA LOGIC CỐT LÕI & TIỆN ÍCH
-│   │   ├── ai/             # Khởi tạo SDK Gemini & quản lý System Prompts
-│   │   ├── image-engine/   # Xử lý logic gọi sinh ảnh qua Pollinations
-│   │   └── utils.ts        # Các hàm tiện ích (clsx, twMerge...)
-│   │
-│   └── types/              # 🏷️ NƠI ĐỊNH NGHĨA TYPESCRIPT INTERFACES
-│       └── stylist.ts      # Khóa chặt Schema JSON đầu ra của LLM
-│
-├── .env.example            # File mẫu chứa các biến môi trường cần thiết
-└── tailwind.config.ts      # Cấu hình màu sắc Neo-Heritage (Đỏ chu sa, Vàng kim...)
+│   ├── app/                # Next.js App Router (page.tsx, stylist/page.tsx, globals.css)
+│   ├── components/
+│   │   ├── home/           # Các component trang chủ (HeroSection, HeritageTopicGrid, LookbookPreview...)
+│   │   ├── stylist/        # Luồng wizard phối đồ 3 bước & LiveOutfitPreview
+│   │   ├── result/         # VisualBreakdown, CulturalGuardrailBanner, HeritageCard3D, ExportLookbookModal...
+│   │   ├── common/         # ImageSlot, Header, Footer
+│   │   ├── icons/          # Bản đồ định danh icon Lucide chuẩn hóa
+│   │   ├── seo/            # JsonLd structured data
+│   │   └── ui/             # shadcn/ui primitives
+│   ├── context/            # StylistContext (State management toàn cục)
+│   ├── data/               # costumes.ts, imageManifest.ts, mockData.ts
+│   ├── lib/                # images.ts, utils.ts
+│   └── types/              # stylist.ts, costumes.ts
+└── docs/
+    └── CULTURAL_REVIEW.md  # Báo cáo đối chiếu lịch sử và quy thức văn hóa Việt
+```
+
+---
+
+## ⚖️ Tuyên bố Bản quyền & Nguồn gốc Hình ảnh
+
+> **Thông cáo:** Hệ thống hình ảnh minh họa do AI tạo (Google Gemini) và đã qua kiểm duyệt đối chiếu tài liệu văn hóa.
+> 
+> Mọi chi tiết phục trang, hoa văn và quy thức đều được tham chiếu từ các tư liệu lịch sử (*Khâm Định Đại Nam Hội Điển Sự Lệ*, *Ngàn Năm Áo Mũ*...) nhằm đảm bảo tính thẩm mỹ đương đại song hành cùng lòng tôn kính di sản văn hóa Việt Nam.

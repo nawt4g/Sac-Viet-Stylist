@@ -120,7 +120,7 @@ export default function RootLayout({
         - Font CSS variables injected on <html> for Tailwind v4 @theme access
         - body: background #FAF8F5, text #1E3A5F (defined in globals.css base layer)
       */}
-      <body className="min-h-full flex flex-col bg-[#FAF8F5] text-[#1E3A5F]">
+      <body className="min-h-full flex flex-col bg-paper text-ink bg-[#FAF8F5] text-[#1E3A5F]">
         {children}
       </body>
     </html>

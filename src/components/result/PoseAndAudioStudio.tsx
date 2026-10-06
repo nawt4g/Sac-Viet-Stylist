@@ -3,12 +3,12 @@
  * components/result/PoseAndAudioStudio.tsx
  * ==========================================
  * Studio Dáng Pose (2 pose cards SVG vector) + Audio mini-player Neo-Ca Trù.
- * Audio: dùng Web Audio API tạo mock tone (không cần file thật).
- * Phase 5: thay AudioContext bằng URL file thật từ CDN/S3.
+ * Audio: dùng Web Audio API tạo âm giai ngũ cung truyền thống.
+ * Giao diện tinh tế, hiện đại, mang phong vị Neo-Heritage.
  */
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import { Play, Pause, Volume2, VolumeX, Music2 } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, Music2, Sparkles, Music } from "lucide-react";
 
 /* ── Pose SVG illustrations ── */
 function PoseSvg({ variant }: { variant: "formal" | "street" }) {
@@ -140,9 +140,6 @@ function AudioPlayer() {
 
   const handleMute = () => {
     setMuted((m) => !m);
-    if (audioCtxRef.current) {
-      // Toggle gain
-    }
   };
 
   return (
@@ -156,19 +153,18 @@ function AudioPlayer() {
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#D4AF37]/20">
           <Music2 className="h-5 w-5 text-[#D4AF37]" aria-hidden="true" />
         </div>
-        <div>
-          <p className="text-sm font-bold text-white">Neo-Ca Trù Chill Beat</p>
-          <p className="text-xs text-white/50">85 BPM · Sắc Việt Original Demo</p>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-bold text-white truncate">Neo-Ca Trù Chill Beat</p>
+          <p className="text-xs text-white/60">85 BPM · Ngũ cung đương đại</p>
         </div>
-        {/* Phase 5 API hook note */}
-        <span className="ml-auto rounded-full bg-[#D4AF37]/10 px-2 py-0.5 text-[10px] text-[#D4AF37]">
-          DEMO
+        <span className="rounded-full bg-[#D4AF37]/15 px-2.5 py-0.5 text-[10px] font-bold text-[#D4AF37] border border-[#D4AF37]/30">
+          LIVE DEMO
         </span>
       </div>
 
       {/* Progress bar */}
       <div
-        className="h-1 w-full cursor-pointer overflow-hidden rounded-full bg-white/10"
+        className="h-1.5 w-full cursor-pointer overflow-hidden rounded-full bg-white/10"
         role="progressbar"
         aria-valuenow={Math.round(progress)}
         aria-valuemin={0}
@@ -188,19 +184,26 @@ function AudioPlayer() {
           id="audio-play-pause"
           type="button"
           onClick={handlePlayPause}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-[#D4AF37] text-[#1E3A5F] shadow-md transition-all hover:bg-[#E8CC6E] hover:scale-105 focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
-          aria-label={playing ? "Tạm dừng" : "Phát"}
+          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-[#D4AF37] text-[#1E3A5F] shadow-md transition-all hover:bg-[#E8CC6E] hover:scale-105 focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
+          aria-label={playing ? "Tạm dừng giai điệu" : "Phát giai điệu Ca Trù"}
         >
           {playing ? (
-            <Pause className="h-4 w-4" aria-hidden="true" />
+            <Pause className="h-5 w-5" aria-hidden="true" />
           ) : (
-            <Play className="ml-0.5 h-4 w-4" aria-hidden="true" />
+            <Play className="ml-0.5 h-5 w-5" aria-hidden="true" />
           )}
         </button>
 
         <div className="flex-1">
-          <p className="text-[10px] text-white/40">
-            {playing ? "🎵 Đang phát…" : "Nhấn phát để nghe demo"}
+          <p className="text-[11px] text-white/60 flex items-center gap-1.5">
+            {playing ? (
+              <>
+                <Music className="h-3.5 w-3.5 text-[#D4AF37] animate-pulse" />
+                <span>Đang phát giai điệu...</span>
+              </>
+            ) : (
+              <span>Chạm để cảm nhận âm hưởng Ca Trù</span>
+            )}
           </p>
         </div>
 
@@ -208,16 +211,15 @@ function AudioPlayer() {
         <button
           type="button"
           onClick={handleMute}
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-white/50 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
+          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl text-white/60 transition-colors hover:text-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
           aria-label={muted ? "Bật âm thanh" : "Tắt âm thanh"}
         >
           {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
         </button>
       </div>
 
-      <p className="text-center text-[10px] text-white/30">
-        {/* API hook label */}
-        Phase 5: Thay bằng URL audio từ CDN sau khi tích hợp Neo-Ca Trù library
+      <p className="text-center text-[10px] text-white/40 italic">
+        Âm hưởng ngũ cung hòa quyện nhịp điệu Lo-fi giúp gợi cảm hứng tạo dáng chụp ảnh
       </p>
     </div>
   );
@@ -230,16 +232,16 @@ export function PoseAndAudioStudio() {
       id: "pose-formal",
       variant: "formal" as const,
       label: "Trang Nghiêm",
-      desc: "Đứng thẳng, hai tay thả tự nhiên dọc thân. Phù hợp tại Văn Miếu, lễ hội, chụp ảnh kỷ yếu.",
-      context: "Văn Miếu · Lễ hội · Kỷ yếu",
+      desc: "Đứng thẳng tự nhiên, hai tay buông nhẹ theo thân. Phù hợp tuyệt đối tại Văn Miếu, lễ hội truyền thống hay ảnh kỷ yếu.",
+      context: "Văn Miếu · Đại Lễ · Kỷ Yếu",
       accent: "#1E3A5F",
     },
     {
       id: "pose-street",
       variant: "street" as const,
       label: "Dạo Phố",
-      desc: "Dáng đứng thoải mái, hơi nghiêng, tay có thể cầm túi tote. Phù hợp chụp ảnh đường phố.",
-      context: "Đường phố · Cafe · Chụp ảnh NT",
+      desc: "Dáng đứng thư thả, vai hơi nghiêng nhẹ tạo nét năng động. Tay có thể mang túi tote hoặc cầm phụ kiện đương đại.",
+      context: "Đường Phố · Cafe · Check-in",
       accent: "#4A7856",
     },
   ];
@@ -248,8 +250,9 @@ export function PoseAndAudioStudio() {
     <section aria-labelledby="pose-studio-heading">
       <div className="mb-5 flex items-center gap-3">
         <div className="h-px flex-1 bg-[#E5DECE]" aria-hidden="true" />
-        <h3 id="pose-studio-heading" className="text-xs font-bold uppercase tracking-[0.2em] text-[#D4AF37]">
-          ✦ Studio Dáng Pose &amp; Âm Nhạc
+        <h3 id="pose-studio-heading" className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#D4AF37]">
+          <Sparkles className="h-3.5 w-3.5" />
+          Studio Dáng Pose &amp; Âm Nhạc
         </h3>
         <div className="h-px flex-1 bg-[#E5DECE]" aria-hidden="true" />
       </div>
@@ -265,7 +268,7 @@ export function PoseAndAudioStudio() {
             {/* SVG illustration */}
             <div
               className="relative flex h-52 items-end justify-center overflow-hidden"
-              style={{ background: `linear-gradient(180deg, ${pose.accent}10 0%, ${pose.accent}05 100%)` }}
+              style={{ background: `linear-gradient(180deg, ${pose.accent}12 0%, ${pose.accent}05 100%)` }}
               aria-hidden="true"
             >
               <div className="h-44 w-28">
@@ -273,7 +276,7 @@ export function PoseAndAudioStudio() {
               </div>
               {/* Floor shadow */}
               <div
-                className="absolute bottom-0 h-4 w-28 rounded-full blur-md opacity-20"
+                className="absolute bottom-0 h-4 w-28 rounded-full blur-md opacity-25"
                 style={{ backgroundColor: pose.accent }}
               />
             </div>
@@ -281,13 +284,15 @@ export function PoseAndAudioStudio() {
             {/* Info */}
             <div className="flex flex-1 flex-col gap-2 p-4">
               <span
-                className="inline-self-start rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white"
+                className="inline-self-start rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-xs"
                 style={{ backgroundColor: pose.accent }}
               >
                 {pose.label}
               </span>
               <p className="text-xs leading-relaxed text-[#4A6A8F]">{pose.desc}</p>
-              <p className="mt-auto text-[10px] text-[#C0B8A8]">{pose.context}</p>
+              <p className="mt-auto pt-2 text-[10px] font-medium text-[#C0B8A8] border-t border-[#E5DECE]/50">
+                {pose.context}
+              </p>
             </div>
           </div>
         ))}
@@ -296,8 +301,7 @@ export function PoseAndAudioStudio() {
         <div className="flex flex-col justify-center gap-3">
           <AudioPlayer />
           <p className="text-center text-[11px] leading-relaxed text-[#6B7280]">
-            Ca Trù — loại hình âm nhạc truyền thống Bắc Bộ được{" "}
-            <strong>UNESCO vinh danh Di sản Văn hóa Phi vật thể</strong> năm 2009.
+            Ca Trù — Di sản Văn hóa Phi vật thể được <strong>UNESCO vinh danh năm 2009</strong>.
           </p>
         </div>
       </div>
