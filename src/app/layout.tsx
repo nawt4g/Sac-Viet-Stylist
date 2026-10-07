@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Be_Vietnam_Pro } from "next/font/google";
+import { SiteHeader } from "@/components/common/SiteHeader";
+import { SiteFooter } from "@/components/common/SiteFooter";
 import "./globals.css";
 
 /* ============================================================
@@ -121,7 +123,9 @@ export default function RootLayout({
         - body: background #FAF8F5, text #1E3A5F (defined in globals.css base layer)
       */}
       <body className="min-h-full flex flex-col bg-paper text-ink bg-[#FAF8F5] text-[#1E3A5F]">
+        <SiteHeader />
         {children}
+        <SiteFooter />
       </body>
     </html>
   );
