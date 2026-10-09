@@ -9,7 +9,7 @@
  *   - Each step component is lazy-rendered based on currentStep
  *   - HeritageFlashcards replaces content when isProcessing = true
  *
- * SSG note: This page is dynamic (uses client state) but no server data fetching needed.
+ * Next 16: searchParams is a Promise and must be awaited.
  */
 
 import type { Metadata } from "next";
@@ -24,10 +24,18 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+type Props = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
 /* ── Page component (Server) ── */
-export default function StylistPage() {
+export default async function StylistPage({ searchParams }: Props) {
+  const resolvedParams = await searchParams;
+  const costumeParam =
+    typeof resolvedParams.costume === "string" ? resolvedParams.costume : undefined;
+
   return (
-    <StylistProvider>
+    <StylistProvider initialCostumeId={costumeParam}>
       <WizardShell />
     </StylistProvider>
   );

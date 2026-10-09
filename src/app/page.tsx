@@ -3,8 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Wand2 } from "lucide-react";
 import { HomePageJsonLd } from "@/components/seo/JsonLd";
-import { SiteHeader } from "@/components/common/SiteHeader";
-import { SiteFooter } from "@/components/common/SiteFooter";
+import { getFlatlay } from "@/lib/images";
 
 /* ── Page-level metadata ── */
 export const metadata: Metadata = {
@@ -71,8 +70,8 @@ function StatementSection() {
     <section className="py-32 lg:py-48 bg-white">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="font-playfair text-3xl sm:text-5xl lg:text-6xl font-medium text-[#1E3A5F] leading-snug">
-          "Di sản không chỉ tồn tại trong bảo tàng hay sách sử. Nó chỉ thực sự sống khi trở thành một phần trong 
-          <span className="italic text-[#D4AF37]"> nhịp thở đương đại.</span>"
+          &ldquo;Di sản không chỉ tồn tại trong bảo tàng hay sách sử. Nó chỉ thực sự sống khi trở thành một phần trong 
+          <span className="italic text-[#D4AF37]"> nhịp thở đương đại.</span>&rdquo;
         </h2>
       </div>
     </section>
@@ -102,7 +101,7 @@ function HeritageEditorialSection() {
           {/* Item 1: Large Left */}
           <div className="md:col-span-7 group">
             <Link href="/viet-phuc/ao-ngu-than" className="block relative aspect-[4/5] overflow-hidden bg-[#E5DECE]">
-              <Image src="/images/flatlay/ao-ngu-than.png" alt="Áo Ngũ Thân" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+              <Image src={getFlatlay("ao-ngu-than").src} alt="Áo Ngũ Thân" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
             </Link>
             <div className="mt-6 flex justify-between items-start">
               <div>
@@ -116,7 +115,7 @@ function HeritageEditorialSection() {
           {/* Item 2: Smaller Right, shifted down */}
           <div className="md:col-span-5 md:pt-32 group">
             <Link href="/viet-phuc/ao-tac" className="block relative aspect-[3/4] overflow-hidden bg-[#E5DECE]">
-              <Image src="/images/flatlay/ao-tac.png" alt="Áo Tấc" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+              <Image src={getFlatlay("ao-tac").src} alt="Áo Tấc" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
             </Link>
             <div className="mt-6 flex justify-between items-start">
               <div>
@@ -148,7 +147,7 @@ function AIProductShowcase() {
 
           <div className="order-1 lg:order-2">
             <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#D4AF37] mb-6">Công nghệ cá nhân hoá</p>
-            <h2 className="font-playfair text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-8">
+            <h2 className="font-playfair text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-8">
               Stylist AI<br />
               Dành riêng cho bạn.
             </h2>
@@ -178,20 +177,20 @@ function GuardrailsSection() {
     <section className="py-24 lg:py-32 bg-[#9E2A2B] text-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
         <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#E8CC6E] mb-6">Bảo chứng văn hoá</p>
-        <h2 className="font-playfair text-4xl sm:text-6xl lg:text-7xl font-bold leading-tight max-w-4xl mx-auto">
+        <h2 className="font-playfair text-4xl sm:text-6xl lg:text-7xl font-bold text-white leading-tight max-w-4xl mx-auto">
           Sáng tạo không đồng nghĩa với phá vỡ chuẩn mực.
         </h2>
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-12 text-left max-w-5xl mx-auto">
           <div>
-            <h3 className="font-playfair text-2xl font-bold mb-4">Tôn trọng bối cảnh</h3>
+            <h3 className="font-playfair text-2xl font-bold text-white mb-4">Tôn trọng bối cảnh</h3>
             <p className="text-white/80 leading-relaxed text-sm">AI tự động cảnh báo nếu trang phục không phù hợp với không gian linh thiêng (như Văn Miếu) hoặc sự kiện trang trọng.</p>
           </div>
           <div>
-            <h3 className="font-playfair text-2xl font-bold mb-4">Chuẩn mực phụ kiện</h3>
+            <h3 className="font-playfair text-2xl font-bold text-white mb-4">Chuẩn mực phụ kiện</h3>
             <p className="text-white/80 leading-relaxed text-sm">Phân tích rủi ro khi kết hợp cổ phục với các phụ kiện đương đại quá phá cách, đưa ra gợi ý thay thế thanh lịch hơn.</p>
           </div>
           <div>
-            <h3 className="font-playfair text-2xl font-bold mb-4">Gợi ý mang tính giáo dục</h3>
+            <h3 className="font-playfair text-2xl font-bold text-white mb-4">Gợi ý mang tính giáo dục</h3>
             <p className="text-white/80 leading-relaxed text-sm">Không chỉ cấm đoán, mọi cảnh báo từ AI đều đi kèm với giải thích lịch sử, giúp người dùng hiểu rõ cội nguồn.</p>
           </div>
         </div>
@@ -284,7 +283,6 @@ export default function HomePage() {
   return (
     <>
       <HomePageJsonLd />
-      <SiteHeader />
       <main id="main-content" role="main" className="flex-1 bg-white">
         <HeroSection />
         <StatementSection />
@@ -294,7 +292,6 @@ export default function HomePage() {
         <VietRemixEditorial />
         <FinalEditorialCTA />
       </main>
-      <SiteFooter />
     </>
   );
 }

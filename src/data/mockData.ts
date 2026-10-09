@@ -17,6 +17,7 @@ import type {
   HeritageCard,
 } from "@/types/stylist";
 import { COSTUMES } from "./costumes";
+import { resolveImageFile } from "./imageManifest";
 
 export { COSTUMES };
 
@@ -36,7 +37,7 @@ export const costumeNguThan: BaseCostume = {
   materials: ["lụa", "gấm", "vải lanh", "cotton cao cấp", "tơ tằm"],
   period: "nguyen",
   region: "central",
-  imageUrl: "/images/flatlay/ao-ngu-than.png",
+  imageUrl: resolveImageFile("flatlay", "ao-ngu-than").src,
   tags: ["áo ngũ thân", "cổ phục", "trang trọng", "tay chẽn", "5 vạt", "Nhà Nguyễn"],
 };
 
@@ -52,7 +53,7 @@ export const costumeAoTac: BaseCostume = {
   materials: ["lụa Hà Đông", "vải cotton", "linen", "tơ tằm"],
   period: "nguyen",
   region: "north",
-  imageUrl: "/images/flatlay/ao-tac.png",
+  imageUrl: resolveImageFile("flatlay", "ao-tac").src,
   tags: ["áo tấc", "cổ phục", "dân gian", "linh hoạt", "ngắn"],
 };
 
@@ -373,7 +374,7 @@ const guardrailCase3: CulturalGuardrail = {
 
 const stylingMixCase3Rejected: StylingMix = {
   id: "mix-ao-tac-short-rejected-001",
-  title: "[CHƯA PHÙ HỢP] Áo Tấc + Quần Short",
+  title: "Áo Tấc + Quần Short",
   style: "Rejected Combination",
   baseCostumeId: "costume-ao-tac-001",
   context: "casual_modern",

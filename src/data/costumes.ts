@@ -10,6 +10,7 @@
  */
 
 import type { BaseCostume, CostumeId } from "@/types/stylist";
+import { resolveImageFile } from "@/data/imageManifest";
 
 export const costumeAoNguThan: BaseCostume = {
   id: "ao-ngu-than",
@@ -23,7 +24,7 @@ export const costumeAoNguThan: BaseCostume = {
   materials: ["lụa", "gấm", "vải lanh", "cotton cao cấp", "tơ tằm"],
   period: "nguyen",
   region: "central",
-  imageUrl: "/images/flatlay/ao-ngu-than.png",
+  imageUrl: resolveImageFile("flatlay", "ao-ngu-than").src,
   tags: ["áo ngũ thân", "cổ phục", "trang trọng", "tay chẽn", "5 vạt", "Nhà Nguyễn"],
   dynasty: "Nhà Nguyễn · 1802–1945",
   colors: [
@@ -47,7 +48,7 @@ export const costumeAoTac: BaseCostume = {
   materials: ["lụa Hà Đông", "vải cotton", "linen", "tơ tằm", "gấm sa"],
   period: "nguyen",
   region: "central",
-  imageUrl: "/images/flatlay/ao-tac.png",
+  imageUrl: resolveImageFile("flatlay", "ao-tac").src,
   tags: ["áo tấc", "lễ phục", "tay thụng", "trang trọng", "Nhà Nguyễn"],
   dynasty: "Nhà Nguyễn · Lễ phục trang trọng",
   colors: [
@@ -71,7 +72,7 @@ export const costumeAoNhatBinh: BaseCostume = {
   materials: ["gấm", "lụa thêu", "sa đoạn hoàng cung", "tơ tằm"],
   period: "nguyen",
   region: "central",
-  imageUrl: "/images/flatlay/ao-nhat-binh.png",
+  imageUrl: resolveImageFile("flatlay", "ao-nhat-binh").src,
   tags: ["áo nhật bình", "triều phục", "cổ vuông", "hoàng tộc", "lễ nghi"],
   dynasty: "Nhà Nguyễn · Triều phục nữ quý tộc",
   colors: [
@@ -95,7 +96,7 @@ export const costumeAoTuThan: BaseCostume = {
   materials: ["đũi", "vải tơ sồi", "lụa thô", "cotton tự nhiên"],
   period: "le",
   region: "north",
-  imageUrl: "/images/flatlay/ao-tu-than.png",
+  imageUrl: resolveImageFile("flatlay", "ao-tu-than").src,
   tags: ["áo tứ thân", "Bắc Bộ", "lễ hội", "dân gian", "yếm đào"],
   dynasty: "Dân gian Bắc Bộ · Thế kỷ 17–20",
   colors: [
@@ -119,7 +120,7 @@ export const costumeAoDai: BaseCostume = {
   materials: ["lụa tơ tằm", "voan", "gấm hoa", "linen dệt thủ công"],
   period: "contemporary",
   region: "all",
-  imageUrl: "/images/flatlay/ao-dai.png",
+  imageUrl: resolveImageFile("flatlay", "ao-dai").src,
   tags: ["áo dài", "quốc phục", "thanh lịch", "đương đại", "di sản"],
   dynasty: "Đương đại · 1930s – nay",
   colors: [

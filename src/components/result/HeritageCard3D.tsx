@@ -114,16 +114,16 @@ function FlipCard({ card }: { card: HeritageCard }) {
           <HeritageTraditionalPattern type={card.type} />
 
           {/* Top row */}
-          <div className="relative z-10 flex items-start justify-between gap-2">
+          <div className="relative z-10 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
             <span
-              className="flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-xs"
+              className="flex items-center gap-1 sm:gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-xs shrink-0"
               style={{ backgroundColor: meta.color }}
             >
               <Icon className="h-3 w-3" />
               <span>{meta.label}</span>
             </span>
             <span
-              className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+              className="rounded-full px-2 py-0.5 text-[10px] font-semibold shrink-0"
               style={{ backgroundColor: level.bg, color: level.text }}
             >
               {level.label}
@@ -131,14 +131,14 @@ function FlipCard({ card }: { card: HeritageCard }) {
           </div>
 
           {/* Center: Title & Summary */}
-          <div className="relative z-10 my-auto py-2">
+          <div className="relative z-10 my-auto py-1 sm:py-2">
             <h4
-              className="font-playfair text-base sm:text-lg font-bold leading-snug"
+              className="font-playfair text-base sm:text-lg font-bold leading-snug line-clamp-3"
               style={{ color: meta.color === "#D4AF37" ? "#1E3A5F" : meta.color }}
             >
               {card.title}
             </h4>
-            <p className="mt-2 line-clamp-4 text-xs leading-relaxed text-[#4A6A8F]">
+            <p className="mt-1.5 line-clamp-3 text-xs leading-relaxed text-[#4A6A8F]">
               {card.summary}
             </p>
           </div>
@@ -169,14 +169,14 @@ function FlipCard({ card }: { card: HeritageCard }) {
 
           {/* Back content */}
           <div className="relative z-10 flex h-full flex-col">
-            <div className="flex items-center justify-between border-b border-white/20 pb-2.5">
-              <div className="flex items-center gap-1.5">
+            <div className="flex flex-wrap items-center justify-between gap-1.5 border-b border-white/20 pb-2">
+              <div className="flex items-center gap-1.5 shrink-0">
                 <Icon className="h-4 w-4 text-white" />
                 <p className="text-xs font-bold uppercase tracking-wider text-white">
                   {meta.label} · Chi tiết
                 </p>
               </div>
-              <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-semibold text-white">
+              <span className="rounded-full bg-white/20 px-2 py-0.5 text-[9px] font-semibold text-white shrink-0">
                 {level.label}
               </span>
             </div>
@@ -229,7 +229,7 @@ export function HeritageCard3D({ cards }: Props) {
       </div>
 
       <div
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
         role="list"
         aria-label="Thẻ tri thức di sản — nhấn để lật"
       >

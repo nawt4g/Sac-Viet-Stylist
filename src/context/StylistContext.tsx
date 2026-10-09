@@ -20,6 +20,7 @@ import React, {
   useCallback,
   type ReactNode,
 } from "react";
+import { COSTUME_MAP } from "@/data/costumes";
 
 /* ============================================================
    TYPE DEFINITIONS
@@ -406,12 +407,34 @@ const StylistContext = createContext<StylistContextValue | null>(null);
    PROVIDER
    ============================================================ */
 
-export function StylistProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(stylistReducer, {
-    ...initialState,
-    completedSteps: new Set<WizardStep>(),
-    selectedAccessories: new Set<AccessoryId>(),
-  });
+interface StylistProviderProps {
+  children: ReactNode;
+  initialCostumeId?: string;
+}
+
+export function StylistProvider({ children, initialCostumeId }: StylistProviderProps) {
+  const [state, dispatch] = useReducer(
+    stylistReducer,
+    undefined,
+    () => {
+      let preselectedCostume: SelectedCostume | null = null;
+      if (initialCostumeId && initialCostumeId in COSTUME_MAP) {
+        const c = COSTUME_MAP[initialCostumeId as CostumeId];
+        preselectedCostume = {
+          id: c.id as CostumeId,
+          name: c.name,
+          nameEn: c.nameEn,
+          color: c.colors?.[0]?.hex ?? c.accentColor ?? "#1E3A5F",
+        };
+      }
+      return {
+        ...initialState,
+        completedSteps: new Set<WizardStep>(),
+        selectedAccessories: new Set<AccessoryId>(),
+        selectedCostume: preselectedCostume,
+      };
+    }
+  );
 
   const goToStep = useCallback(
     (step: WizardStep) => dispatch({ type: "GO_TO_STEP", payload: step }),

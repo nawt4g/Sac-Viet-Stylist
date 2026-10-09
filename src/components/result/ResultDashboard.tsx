@@ -8,9 +8,9 @@
  * Right (Scrolling): Title, Guardrail, Why this outfit, Breakdown, Heritage, Pose.
  */
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import {
-  RotateCcw, Download, Sparkles, CheckCircle2, AlertTriangle, XCircle,
+  RotateCcw, Download, CheckCircle2, AlertTriangle, XCircle,
   User, LayoutGrid, SlidersHorizontal, ChevronsLeftRight, ArrowRight
 } from "lucide-react";
 import Link from "next/link";
@@ -20,15 +20,32 @@ import { EdgeCaseRedModal } from "@/components/result/EdgeCaseRedModal";
 import { HeritageCard3D } from "@/components/result/HeritageCard3D";
 import { PoseAndAudioStudio } from "@/components/result/PoseAndAudioStudio";
 import { ExportLookbookModal } from "@/components/result/ExportLookbookModal";
-import { VisualBreakdown } from "@/components/result/VisualBreakdown";
 import { OUTFIT_BY_STATUS } from "@/data/mockData";
 import { ImageSlot } from "@/components/common/ImageSlot";
 import { getLookImage, getFlatlay } from "@/lib/images";
+import { isImageOnDisk } from "@/data/imageManifest";
 import type { CostumeId, ContextType } from "@/types/stylist";
 
 /* ── Demo case switcher ── */
 function DemoCaseSwitcher() {
   const { state, dispatch } = useStylist();
+  const showDebug = useSyncExternalStore(
+    (onStoreChange) => {
+      window.addEventListener("popstate", onStoreChange);
+      return () => window.removeEventListener("popstate", onStoreChange);
+    },
+    () => {
+      const isDev = process.env.NODE_ENV !== "production";
+      const hasDebug =
+        typeof window !== "undefined" &&
+        new URLSearchParams(window.location.search).get("debug") === "1";
+      return isDev || hasDebug;
+    },
+    () => false
+  );
+
+  if (!showDebug) return null;
+
   const cases = [
     { id: "GREEN", label: "Phù hợp", icon: CheckCircle2 },
     { id: "YELLOW", label: "Chú ý", icon: AlertTriangle },
@@ -44,6 +61,7 @@ function DemoCaseSwitcher() {
         <button
           key={id}
           type="button"
+          aria-label={label}
           onClick={() => dispatch({ type: "SET_ACTIVE_CASE", payload: id })}
           className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider transition-all ${
             state.activeCase === id
@@ -71,8 +89,20 @@ function ResultImageGallery({ costumeId, contextId, mixTitle, aiImageUrl, fallba
   const [sliderPosition, setSliderPosition] = useState(50);
 
   const { image: modelLook } = getLookImage({ costumeId: costumeId as CostumeId, contextId: contextId as ContextType });
-  const modelImageSrc = aiImageUrl ?? fallbackUrl ?? modelLook?.src ?? "/hero-editorial.png";
-  const modelAvailable = Boolean(aiImageUrl ?? modelLook?.available);
+  
+  let modelImageSrc = "/hero-editorial.png";
+  let modelAvailable = true;
+
+  if (aiImageUrl) {
+    modelImageSrc = aiImageUrl;
+    modelAvailable = true;
+  } else if (modelLook) {
+    modelImageSrc = modelLook.src;
+    modelAvailable = modelLook.available;
+  } else if (fallbackUrl) {
+    modelImageSrc = fallbackUrl;
+    modelAvailable = isImageOnDisk(fallbackUrl);
+  }
 
   const flatlay = getFlatlay(costumeId as CostumeId);
   const altContext = contextId === "dam-cuoi" ? "van-mieu" : "dam-cuoi";
@@ -85,13 +115,13 @@ function ResultImageGallery({ costumeId, contextId, mixTitle, aiImageUrl, fallba
       <div className="absolute top-6 left-6 right-6 z-30 flex justify-center">
         <div className="flex bg-white/80 backdrop-blur-md p-1 rounded-full shadow-sm border border-white/20">
           {[
-            { id: "model", icon: User, label: "Editorial" },
-            { id: "flatlay", icon: LayoutGrid, label: "Archive" },
-            { id: "compare", icon: SlidersHorizontal, label: "Compare" }
+            { id: "model" as const, icon: User, label: "Editorial" },
+            { id: "flatlay" as const, icon: LayoutGrid, label: "Archive" },
+            { id: "compare" as const, icon: SlidersHorizontal, label: "Compare" }
           ].map((mode) => (
             <button
               key={mode.id}
-              onClick={() => setViewMode(mode.id as any)}
+              onClick={() => setViewMode(mode.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-colors ${
                 viewMode === mode.id ? "bg-[#1E3A5F] text-white" : "text-[#4A6A8F] hover:text-[#1E3A5F]"
               }`}
@@ -121,11 +151,14 @@ function ResultImageGallery({ costumeId, contextId, mixTitle, aiImageUrl, fallba
               <>
                 {/* Background (Look B) */}
                 <div className="absolute inset-0">
-                  <ImageSlot src={altLook.src} alt="B" available={altLook.available} aspectRatio="3/4" className="w-full h-full object-cover" />
+                  <ImageSlot src={altLook.src} alt="Bản phối đối chiếu" available={altLook.available} aspectRatio="3/4" className="w-full h-full object-cover" />
                 </div>
-                {/* Foreground (Look A) */}
-                <div className="absolute inset-0 overflow-hidden" style={{ width: `${sliderPosition}%` }}>
-                  <ImageSlot src={modelImageSrc} alt="A" available={modelAvailable} aspectRatio="3/4" className="w-full h-full object-cover" />
+                {/* Foreground (Look A) with clip-path */}
+                <div
+                  className="absolute inset-0 overflow-hidden"
+                  style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+                >
+                  <ImageSlot src={modelImageSrc} alt="Bản phối đang chọn" available={modelAvailable} aspectRatio="3/4" className="w-full h-full object-cover" />
                 </div>
                 {/* Slider handle */}
                 <div className="absolute top-0 bottom-0 z-30 w-0.5 bg-white shadow-xl cursor-ew-resize" style={{ left: `${sliderPosition}%` }}>
@@ -133,7 +166,15 @@ function ResultImageGallery({ costumeId, contextId, mixTitle, aiImageUrl, fallba
                     <ChevronsLeftRight className="h-4 w-4" />
                   </div>
                 </div>
-                <input type="range" min="0" max="100" value={sliderPosition} onChange={(e) => setSliderPosition(Number(e.target.value))} className="absolute inset-0 z-40 w-full h-full opacity-0 cursor-ew-resize" />
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={sliderPosition}
+                  onChange={(e) => setSliderPosition(Number(e.target.value))}
+                  aria-label="Thanh trượt so sánh hai phối đồ"
+                  className="absolute inset-0 z-40 w-full h-full opacity-0 cursor-ew-resize"
+                />
               </>
             ) : (
               <div className="flex h-full w-full items-center justify-center bg-white p-6 text-center">
@@ -179,7 +220,7 @@ export function ResultDashboard() {
           <ResultImageGallery 
             costumeId={currentCostumeId} 
             contextId={currentContextId} 
-            mixTitle={mix.title} 
+            mixTitle={mix.title.replace(/^\[CHƯA PHÙ HỢP\]\s*/i, "")} 
             aiImageUrl={null} 
             fallbackUrl={selectedCostumes[0]?.imageUrl} 
           />
@@ -204,9 +245,28 @@ export function ResultDashboard() {
 
           {/* Typography-led Title */}
           <div className="mb-16">
-            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#D4AF37] mb-4">Kết quả phong cách</p>
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#D4AF37]">
+                Kết quả phong cách
+              </p>
+              {guardrail.status === "RED" && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#FEE2E2] px-2.5 py-0.5 text-xs font-bold text-[#DC2626]">
+                  <XCircle className="h-3.5 w-3.5" /> Chưa phù hợp
+                </span>
+              )}
+              {guardrail.status === "YELLOW" && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#FEF3C7] px-2.5 py-0.5 text-xs font-bold text-[#D97706]">
+                  <AlertTriangle className="h-3.5 w-3.5" /> Chú ý ngữ cảnh
+                </span>
+              )}
+              {guardrail.status === "GREEN" && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#DCFCE7] px-2.5 py-0.5 text-xs font-bold text-[#16A34A]">
+                  <CheckCircle2 className="h-3.5 w-3.5" /> Đạt chuẩn văn hóa
+                </span>
+              )}
+            </div>
             <h1 className="font-playfair text-4xl sm:text-5xl font-bold text-[#1E3A5F] leading-tight">
-              {mix.title}
+              {mix.title.replace(/^\[CHƯA PHÙ HỢP\]\s*/i, "")}
             </h1>
             <p className="mt-6 text-lg text-[#4A6A8F] leading-relaxed font-sans">
               {mix.overallDescription}

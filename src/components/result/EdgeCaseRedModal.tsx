@@ -13,7 +13,7 @@ import { X, ArrowRight, BookOpen, ShieldCheck, XCircle, CheckCircle2 } from "luc
 import { useStylist } from "@/context/StylistContext";
 import { ImageSlot } from "@/components/common/ImageSlot";
 import { getLookImage } from "@/lib/images";
-import { isImageOnDisk } from "@/data/imageManifest";
+import { resolveImageFile } from "@/data/imageManifest";
 
 interface Props {
   isOpen: boolean;
@@ -49,15 +49,17 @@ export function EdgeCaseRedModal({ isOpen, onClose }: Props) {
   };
 
   // Image lookup for error and fixed looks
+  const errorResolved = resolveImageFile("looks", "ao-tac-short-loi");
   const errorLook = getLookImage("ao-tac-short-loi").image ?? {
-    src: "/images/looks/ao-tac-short-loi.webp",
-    available: isImageOnDisk("ao-tac-short-loi") || isImageOnDisk("/images/looks/ao-tac-short-loi.webp"),
+    src: errorResolved.src,
+    available: errorResolved.available,
     alt: "Minh họa lỗi: Áo Tấc phối Quần Short",
   };
 
+  const fixedResolved = resolveImageFile("looks", "ao-tac-van-mieu");
   const fixedLook = getLookImage({ costumeId: "ao-tac", contextId: "van-mieu" }).image ?? {
-    src: "/images/looks/ao-tac-van-mieu.webp",
-    available: isImageOnDisk("ao-tac-van-mieu") || isImageOnDisk("/images/looks/ao-tac-van-mieu.webp"),
+    src: fixedResolved.src,
+    available: fixedResolved.available,
     alt: "Minh họa chuẩn: Áo Tấc phối Quần Lụa Trắng",
   };
 

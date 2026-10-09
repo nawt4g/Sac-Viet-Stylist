@@ -1,28 +1,39 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Be_Vietnam_Pro } from "next/font/google";
+import localFont from "next/font/local";
 import { SiteHeader } from "@/components/common/SiteHeader";
 import { SiteFooter } from "@/components/common/SiteFooter";
 import "./globals.css";
 
 /* ============================================================
-   FONT SETUP — next/font/google (CSS variable pattern)
+   FONT SETUP — next/font/local (Offline-capable)
    Using CSS variable method so fonts work with Tailwind v4
    ============================================================ */
 
-const playfairDisplay = Playfair_Display({
-  subsets: ["latin", "vietnamese"],
-  display: "swap",
+const playfairDisplay = localFont({
+  src: [
+    { path: "../fonts/PlayfairDisplay-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/PlayfairDisplay-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/PlayfairDisplay-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/PlayfairDisplay-Bold.woff2", weight: "700", style: "normal" },
+    { path: "../fonts/PlayfairDisplay-ExtraBold.woff2", weight: "800", style: "normal" },
+    { path: "../fonts/PlayfairDisplay-Italic.woff2", weight: "400", style: "italic" },
+    { path: "../fonts/PlayfairDisplay-BoldItalic.woff2", weight: "700", style: "italic" },
+  ],
   variable: "--font-playfair",
-  // Playfair Display is a variable font — weight range supported
-  weight: ["400", "500", "600", "700", "800", "900"],
-  style: ["normal", "italic"],
+  display: "swap",
 });
 
-const beVietnamPro = Be_Vietnam_Pro({
-  subsets: ["latin", "vietnamese"],
-  display: "swap",
+const beVietnamPro = localFont({
+  src: [
+    { path: "../fonts/BeVietnamPro-Light.woff2", weight: "300", style: "normal" },
+    { path: "../fonts/BeVietnamPro-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/BeVietnamPro-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/BeVietnamPro-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/BeVietnamPro-Bold.woff2", weight: "700", style: "normal" },
+    { path: "../fonts/BeVietnamPro-ExtraBold.woff2", weight: "800", style: "normal" },
+  ],
   variable: "--font-be-vietnam",
-  weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 /* ============================================================

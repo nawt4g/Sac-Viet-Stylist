@@ -34,17 +34,14 @@ export function WizardShell() {
 
   return (
     <div className="min-h-screen bg-[#FAF8F5]">
-      {/* Page header */}
-      <header
-        className="sticky top-0 z-50 border-b border-[#E5DECE]/60 bg-[#FAF8F5]/90 backdrop-blur-md"
-        role="banner"
-      >
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      {/* Wizard sub-toolbar (non-sticky) */}
+      <div className="border-b border-[#E5DECE]/60 bg-[#FAF8F5]">
+        <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4">
             <Link
               id="wizard-back-home"
               href="/"
-              className="flex min-h-[44px] items-center gap-1.5 text-sm font-medium text-[#4A6A8F] transition-colors hover:text-[#9E2A2B] focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
+              className="flex min-h-[44px] items-center gap-1.5 text-xs sm:text-sm font-medium text-[#4A6A8F] transition-colors hover:text-[#9E2A2B] focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
               aria-label="Quay về Trang chủ"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
@@ -52,11 +49,11 @@ export function WizardShell() {
             </Link>
             <div className="h-4 w-px bg-[#E5DECE]" aria-hidden="true" />
             <div className="flex items-center gap-2">
-              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br from-[#9E2A2B] to-[#D4AF37] text-[10px] font-bold text-white" aria-hidden="true">
+              <span className="flex h-5 w-5 items-center justify-center rounded-md bg-gradient-to-br from-[#9E2A2B] to-[#D4AF37] text-[9px] font-bold text-white" aria-hidden="true">
                 SV
               </span>
-              <span className="font-playfair text-sm font-bold text-[#1E3A5F]">
-                AI Stylist
+              <span className="font-playfair text-xs sm:text-sm font-bold text-[#1E3A5F]">
+                Studio Phối Đồ AI
               </span>
             </div>
           </div>
@@ -73,7 +70,7 @@ export function WizardShell() {
             </button>
           </div>
         </div>
-      </header>
+      </div>
 
       {/* Main content */}
       <main

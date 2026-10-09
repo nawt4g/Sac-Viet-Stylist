@@ -12,7 +12,7 @@
  *   - Nhấp chọn bảng màu đề xuất sẽ cập nhật trực tiếp vào trang phục xem trước.
  */
 
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useState } from "react";
 import Image from "next/image";
 import {
   Upload,
@@ -140,21 +140,45 @@ export function StepSkinTone() {
   const { state, dispatch, simulateScan, nextStep } = useStylist();
   const { selfieImage, isScanning, detectedUndertone, selectedCostume } = state;
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
-  // Handle file upload
-  const handleFileChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
+  const validateAndProcessFile = useCallback(
+    (file: File) => {
+      setUploadError(null);
+      const validTypes = ["image/jpeg", "image/png", "image/webp"];
+      if (!validTypes.includes(file.type)) {
+        setUploadError("Định dạng tệp không được hỗ trợ. Vui lòng chọn ảnh JPG, PNG hoặc WEBP.");
+        return;
+      }
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        setUploadError("Kích thước tệp vượt quá 5MB. Vui lòng chọn ảnh có dung lượng nhỏ hơn.");
+        return;
+      }
       const reader = new FileReader();
       reader.onload = (ev) => {
         if (ev.target?.result) {
           dispatch({ type: "SET_SELFIE", payload: ev.target.result as string });
         }
       };
+      reader.onerror = () => {
+        setUploadError("Không thể đọc tệp ảnh. Vui lòng thử lại.");
+      };
       reader.readAsDataURL(file);
     },
     [dispatch]
+  );
+
+  // Handle file upload
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      validateAndProcessFile(file);
+      // Reset input value so re-uploading the same file works if needed
+      e.target.value = "";
+    },
+    [validateAndProcessFile]
   );
 
   // Drag & drop
@@ -162,16 +186,10 @@ export function StepSkinTone() {
     (e: React.DragEvent<HTMLDivElement>) => {
       e.preventDefault();
       const file = e.dataTransfer.files?.[0];
-      if (!file || !file.type.startsWith("image/")) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        if (ev.target?.result) {
-          dispatch({ type: "SET_SELFIE", payload: ev.target.result as string });
-        }
-      };
-      reader.readAsDataURL(file);
+      if (!file) return;
+      validateAndProcessFile(file);
     },
-    [dispatch]
+    [validateAndProcessFile]
   );
 
   const handleDragOver = (e: React.DragEvent) => e.preventDefault();
@@ -238,7 +256,10 @@ export function StepSkinTone() {
               {!isScanning && (
                 <button
                   type="button"
-                  onClick={() => dispatch({ type: "SET_SELFIE", payload: "" })}
+                  onClick={() => {
+                    setUploadError(null);
+                    dispatch({ type: "SET_SELFIE", payload: "" });
+                  }}
                   className="absolute right-3 top-3 z-10 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-black/55 text-white backdrop-blur-sm transition-all hover:bg-black/75 focus-visible:outline-2 focus-visible:outline-gold"
                   aria-label="Xóa ảnh và chọn lại"
                 >
@@ -255,9 +276,12 @@ export function StepSkinTone() {
               aria-label="Vùng tải ảnh selfie — nhấp để chọn hoặc kéo thả ảnh vào đây"
               className="flex aspect-square w-full min-h-[44px] cursor-pointer flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed border-gold/50 bg-gradient-to-b from-paper to-paper-warm p-6 transition-all duration-200 hover:border-gold hover:bg-paper focus-visible:outline-2 focus-visible:outline-gold"
               onClick={() => fileInputRef.current?.click()}
-              onKeyDown={(e) =>
-                e.key === "Enter" && fileInputRef.current?.click()
-              }
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  fileInputRef.current?.click();
+                }
+              }}
               onDrop={handleDrop}
               onDragOver={handleDragOver}
             >
@@ -272,19 +296,30 @@ export function StepSkinTone() {
                 <p className="text-sm font-semibold text-ink">
                   Kéo thả hoặc nhấp để tải ảnh
                 </p>
-                <p className="mt-1 text-xs text-muted-foreground">
+                <p className="mt-1 text-xs text-[#4A6A8F]">
                   JPG, PNG, WEBP · Tối đa 5MB
                 </p>
               </div>
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/webp"
                 className="sr-only"
                 onChange={handleFileChange}
                 aria-hidden="true"
                 tabIndex={-1}
               />
+            </div>
+          )}
+
+          {/* Upload error banner if any */}
+          {uploadError && (
+            <div
+              role="alert"
+              className="flex items-start gap-2.5 rounded-xl border border-red-300 bg-red-50 p-3 text-xs text-red-700"
+            >
+              <AlertCircle className="h-4 w-4 shrink-0 text-red-600 mt-0.5" />
+              <span>{uploadError}</span>
             </div>
           )}
 
@@ -294,7 +329,10 @@ export function StepSkinTone() {
               <button
                 id="btn-use-model-selfie"
                 type="button"
-                onClick={() => dispatch({ type: "USE_MODEL_SELFIE" })}
+                onClick={() => {
+                  setUploadError(null);
+                  dispatch({ type: "USE_MODEL_SELFIE" });
+                }}
                 className="flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-paper-border bg-white px-4 py-2.5 text-sm font-semibold text-ink shadow-xs transition-all hover:border-gold hover:bg-paper focus-visible:outline-2 focus-visible:outline-gold"
                 aria-label="Sử dụng ảnh người mẫu có sẵn để test nhanh"
               >

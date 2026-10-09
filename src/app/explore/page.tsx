@@ -1,23 +1,33 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, Sparkles, SlidersHorizontal } from "lucide-react";
+import { ArrowUpRight, SlidersHorizontal } from "lucide-react";
+import { getLookImage } from "@/lib/images";
 
 export const metadata: Metadata = {
   title: "Khám Phá Việt Phục — Sắc Việt AI Stylist",
   description: "Khám phá các gợi ý phối đồ cổ phục Việt Nam theo phong cách đương đại.",
 };
 
-const MOCK_EXPLORE_ITEMS = [
-  { id: "1", title: "Minimal Ngũ Thân", costume: "Áo Ngũ Thân", context: "Dạo phố", img: "/images/looks/ngu-than-navy-dao-pho.png" },
-  { id: "2", title: "Tấc Kỷ Yếu", costume: "Áo Tấc", context: "Kỷ yếu", img: "/images/looks/ao-tac-van-mieu.png" },
-  { id: "3", title: "Nhật Bình Đương Đại", costume: "Nhật Bình", context: "Chụp ảnh", img: "/images/looks/nhat-binh-chup-anh.png" },
-  { id: "4", title: "Áo Dài Y2K", costume: "Áo Dài", context: "Dạo phố", img: "/images/looks/ao-dai-trang-ky-yeu.png" },
-  { id: "5", title: "Tứ Thân Lễ Hội", costume: "Tứ Thân", context: "Lễ hội", img: "/images/looks/tu-than-nau-le-hoi.png" },
-  { id: "6", title: "Đám Cưới Cổ Truyền", costume: "Ngũ Thân", context: "Lễ cưới", img: "/images/looks/ngu-than-do-dam-cuoi.png" },
+const EXPLORE_LOOK_CONFIGS = [
+  { id: "1", lookId: "ngu-than-navy-dao-pho", title: "Minimal Ngũ Thân", costume: "Áo Ngũ Thân", context: "Dạo phố" },
+  { id: "2", lookId: "ao-tac-van-mieu", title: "Tấc Kỷ Yếu", costume: "Áo Tấc", context: "Kỷ yếu" },
+  { id: "3", lookId: "nhat-binh-chup-anh", title: "Nhật Bình Đương Đại", costume: "Nhật Bình", context: "Chụp ảnh" },
+  { id: "4", lookId: "ao-dai-trang-ky-yeu", title: "Áo Dài Y2K", costume: "Áo Dài", context: "Dạo phố" },
+  { id: "5", lookId: "tu-than-nau-le-hoi", title: "Tứ Thân Lễ Hội", costume: "Tứ Thân", context: "Lễ hội" },
+  { id: "6", lookId: "ngu-than-do-dam-cuoi", title: "Đám Cưới Cổ Truyền", costume: "Ngũ Thân", context: "Lễ cưới" },
 ];
 
 export default function ExplorePage() {
+  const exploreItems = EXPLORE_LOOK_CONFIGS.map((config) => {
+    const look = getLookImage(config.lookId).image;
+    return {
+      ...config,
+      img: look?.src ?? "/hero-editorial.png",
+      available: look?.available ?? false,
+    };
+  });
+
   return (
     <main className="flex-1 bg-[#FAF8F5] py-12 lg:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -33,7 +43,7 @@ export default function ExplorePage() {
         </header>
 
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-          {MOCK_EXPLORE_ITEMS.map((item) => (
+          {exploreItems.map((item) => (
             <div key={item.id} className="group relative flex flex-col overflow-hidden rounded-2xl border border-[#E5DECE] bg-white transition-all hover:shadow-xl hover:-translate-y-1">
               <div className="relative aspect-[3/4] bg-[#F3EFE8]">
                 <Image src={item.img} alt={item.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />

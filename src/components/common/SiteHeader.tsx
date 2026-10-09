@@ -12,10 +12,10 @@
  *   Phối đồ AI (CTA) → /stylist
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Wand2, Menu, X, ChevronDown, BookOpen, Layers, Bookmark, Compass } from "lucide-react";
+import { Wand2, Menu, X, ChevronDown, BookOpen, Bookmark, Compass } from "lucide-react";
 
 /* ── NAV DATA ── */
 const EXPLORE_ITEMS = [
@@ -49,7 +49,13 @@ const NAV_ITEMS = [
 ];
 
 /* ── Dropdown for Explore ── */
-function ExploreDropdown({ items }: { items: typeof EXPLORE_ITEMS }) {
+function ExploreDropdown({
+  items,
+  onItemClick,
+}: {
+  items: typeof EXPLORE_ITEMS;
+  onItemClick?: () => void;
+}) {
   return (
     <div
       className="absolute left-0 top-full mt-1.5 w-52 origin-top-left overflow-hidden rounded-xl border border-[#E5DECE] bg-white shadow-xl shadow-[#1E3A5F]/08 z-50"
@@ -60,6 +66,7 @@ function ExploreDropdown({ items }: { items: typeof EXPLORE_ITEMS }) {
           key={item.href}
           href={item.href}
           role="menuitem"
+          onClick={onItemClick}
           className="flex items-center px-4 py-2.5 text-sm font-medium text-[#4A6A8F] transition-colors duration-150 hover:bg-[#FAF8F5] hover:text-[#9E2A2B] focus-visible:bg-[#FAF8F5] focus-visible:outline-none"
         >
           {item.label}
@@ -75,11 +82,10 @@ export function SiteHeader() {
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
   const pathname = usePathname();
 
-  // Close mobile menu on route change
-  useEffect(() => {
+  const closeMenu = useCallback(() => {
     setMobileOpen(false);
     setDropdownOpen(null);
-  }, [pathname]);
+  }, []);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -113,11 +119,12 @@ export function SiteHeader() {
         className="sticky top-0 z-50 border-b border-[#E5DECE]/70 bg-[#FAF8F5]/92 backdrop-blur-md"
         role="banner"
       >
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-14 sm:h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* ── Logo ── */}
           <Link
             id="nav-logo"
             href="/"
+            onClick={closeMenu}
             className="flex items-center gap-2.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9E2A2B]"
             aria-label="Sắc Việt AI Stylist — Trang chủ"
           >
@@ -185,7 +192,7 @@ export function SiteHeader() {
 
                   {/* Dropdown */}
                   {dropdown && dropdownOpen === href && (
-                    <ExploreDropdown items={dropdown} />
+                    <ExploreDropdown items={dropdown} onItemClick={closeMenu} />
                   )}
                 </li>
               ))}
@@ -198,6 +205,7 @@ export function SiteHeader() {
             <Link
               id="nav-cta"
               href="/stylist"
+              onClick={closeMenu}
               className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-[#9E2A2B] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all duration-200 hover:bg-[#7D1F20] hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9E2A2B]"
               aria-label="Tạo outfit với AI Stylist"
             >
@@ -237,7 +245,7 @@ export function SiteHeader() {
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-[#1E3A5F]/40 backdrop-blur-sm"
-            onClick={() => setMobileOpen(false)}
+            onClick={closeMenu}
             aria-hidden="true"
           />
 
@@ -255,7 +263,7 @@ export function SiteHeader() {
               </div>
               <button
                 type="button"
-                onClick={() => setMobileOpen(false)}
+                onClick={closeMenu}
                 className="flex h-9 w-9 items-center justify-center rounded-lg text-[#6B7280] hover:bg-[#F3EFE8] focus-visible:outline-2 focus-visible:outline-[#D4AF37]"
                 aria-label="Đóng menu"
               >
@@ -264,7 +272,15 @@ export function SiteHeader() {
             </div>
 
             {/* Drawer content */}
-            <nav className="px-4 py-6" aria-label="Điều hướng di động">
+            <nav
+              className="px-4 py-6"
+              aria-label="Điều hướng di động"
+              onClick={(e) => {
+                if ((e.target as HTMLElement).closest("a")) {
+                  closeMenu();
+                }
+              }}
+            >
               {/* Primary CTA */}
               <Link
                 href="/stylist"

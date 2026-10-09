@@ -22,7 +22,7 @@ import { useState } from "react";
 import type { CulturalGuardrail, GuardrailStatus } from "@/types/stylist";
 import { ImageSlot } from "@/components/common/ImageSlot";
 import { getLookImage } from "@/lib/images";
-import { isImageOnDisk } from "@/data/imageManifest";
+import { resolveImageFile } from "@/data/imageManifest";
 
 const CONFIG: Record<GuardrailStatus, {
   icon: typeof ShieldCheck;
@@ -74,14 +74,17 @@ export function CulturalGuardrailBanner({ guardrail, onOpenRedModal }: Props) {
   const StatusIcon = cfg.statusIcon;
 
   // Comparison images for RED status
+  const errorResolved = resolveImageFile("looks", "ao-tac-short-loi");
   const errorLook = getLookImage("ao-tac-short-loi").image ?? {
-    src: "/images/looks/ao-tac-short-loi.webp",
-    available: isImageOnDisk("ao-tac-short-loi") || isImageOnDisk("/images/looks/ao-tac-short-loi.webp"),
+    src: errorResolved.src,
+    available: errorResolved.available,
     alt: "Ảnh lỗi: Áo Tấc phối Quần Short",
   };
+
+  const fixedResolved = resolveImageFile("looks", "ao-tac-van-mieu");
   const fixedLook = getLookImage({ costumeId: "ao-tac", contextId: "van-mieu" }).image ?? {
-    src: "/images/looks/ao-tac-van-mieu.webp",
-    available: isImageOnDisk("ao-tac-van-mieu") || isImageOnDisk("/images/looks/ao-tac-van-mieu.webp"),
+    src: fixedResolved.src,
+    available: fixedResolved.available,
     alt: "Ảnh chuẩn: Áo Tấc phối Quần Lụa Trắng",
   };
 

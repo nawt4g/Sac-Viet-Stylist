@@ -11,6 +11,7 @@
     "lint": "eslint",
     "images:sync": "node scripts/sync-images.mjs",
     "images:process": "node scripts/process-images.mjs",
+    "images:verify": "node scripts/verify-images.mjs",
     "sync:images": "node scripts/sync-images.mjs"
   },
   "dependencies": {
